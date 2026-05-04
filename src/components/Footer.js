@@ -22,8 +22,8 @@ const Footer = () => {
       { name: 'Community', href: '#' }
     ],
     legal: [
-      { name: 'Privacy Policy', href: '#' },
-      { name: 'Terms of Service', href: '#' },
+      { name: 'Privacy Policy', href: '/privacy-policy' },
+      { name: 'Terms of Service', href: '/terms-of-service' },
       { name: 'Cookie Policy', href: '#' },
       { name: 'GDPR', href: '#' }
     ]
@@ -44,10 +44,10 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center mb-4">
               <MessageCircle className="h-8 w-8 text-whatsapp mr-2" />
-              <span className="font-bold text-xl">WhatsAppBot</span>
+              <span className="font-bold text-xl">Cyduck</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
-              Your intelligent WhatsApp reminder and assistant bot. Never forget important tasks again with our AI-powered solution.
+              Your intelligent WhatsApp reminder and assistant bot by Cyduck. Never forget important tasks again with our AI-powered solution.
             </p>
             <div className="flex space-x-4 mb-6">
               {socialLinks.map((social, index) => (
@@ -64,7 +64,7 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center text-gray-400">
                 <Mail className="h-4 w-4 mr-2" />
-                <span className="text-sm">support@whatsappbot.com</span>
+                <span className="text-sm">support@cyduck.com</span>
               </div>
               <div className="flex items-center text-gray-400">
                 <Phone className="h-4 w-4 mr-2" />
@@ -129,7 +129,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2024 WhatsAppBot. All rights reserved.
+              © 2024 Cyduck. All rights reserved.
             </div>
             <div className="flex space-x-6">
               {footerLinks.legal.map((link, index) => (

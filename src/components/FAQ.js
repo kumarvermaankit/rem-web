@@ -126,7 +126,7 @@ const FAQ = () => {
                     Get instant help via WhatsApp
                   </p>
                   <button className="w-full bg-whatsapp text-white py-2 rounded-lg font-medium hover:bg-whatsapp-dark transition-colors">
-                    Start Chat
+                    Contact Support
                   </button>
                 </div>
                 
@@ -136,7 +136,7 @@ const FAQ = () => {
                     support@whatsappbot.com
                   </p>
                   <button className="w-full bg-gray-800 text-white py-2 rounded-lg font-medium hover:bg-gray-900 transition-colors">
-                    Send Email
+                    Email Us
                   </button>
                 </div>
               </div>

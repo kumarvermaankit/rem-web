@@ -208,7 +208,7 @@ const Pricing = () => {
               </ul>
               
               <button className={`w-full py-3 rounded-lg font-semibold transition-colors ${plan.buttonColor}`}>
-                {plan.price === 'Custom' ? 'Contact Sales' : plan.price === 0 ? 'Start Free' : 'Get Started'}
+                {plan.price === 'Custom' ? 'Contact Sales' : plan.price === 0 ? 'Get Started' : 'Choose Plan'}
               </button>
             </div>
           ))}

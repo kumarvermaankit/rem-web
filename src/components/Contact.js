@@ -36,7 +36,7 @@ const Contact = () => {
       icon: Mail,
       title: 'Email Support',
       description: 'Send us a detailed message',
-      value: 'support@whatsappbot.com',
+      value: 'support@cyduck.com',
       action: 'Send Email'
     },
     {
@@ -163,7 +163,7 @@ const Contact = () => {
                     type="submit"
                     className="w-full bg-whatsapp text-white py-3 rounded-lg font-semibold hover:bg-whatsapp-dark transition-colors flex items-center justify-center"
                   >
-                    Start Free Trial
+                    Get Started
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </button>
                 </form>
@@ -175,8 +175,8 @@ const Contact = () => {
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">
                     Thank You for Signing Up!
                   </h4>
-                  <p className="text-gray-600 mb-6">
-                    Check your WhatsApp for a message from us to complete your setup.
+                  <p className="text-gray-600 mb-3">
+                    Check your email for a message from support@cyduck.com to complete your setup.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}

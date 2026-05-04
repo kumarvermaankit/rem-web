@@ -108,7 +108,7 @@ const Features = () => {
                 From simple reminders to complex task management, our WhatsApp bot handles it all with the power of artificial intelligence.
               </p>
               <button className="bg-whatsapp text-white px-6 py-3 rounded-lg font-semibold hover:bg-whatsapp-dark transition-colors">
-                Explore All Features
+                Learn More
               </button>
             </div>
             <div className="grid grid-cols-2 gap-4">
