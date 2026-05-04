@@ -125,19 +125,19 @@ const FAQ = () => {
                   <p className="text-sm text-gray-600 mb-3">
                     Get instant help via WhatsApp
                   </p>
-                  <button className="w-full bg-whatsapp text-white py-2 rounded-lg font-medium hover:bg-whatsapp-dark transition-colors">
+                  <a href="tel:+919555418627" className="w-full bg-whatsapp text-white py-2 rounded-lg font-medium hover:bg-whatsapp-dark transition-colors inline-block text-center">
                     Contact Support
-                  </button>
+                  </a>
                 </div>
                 
                 <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-2">Email Support</h4>
                   <p className="text-sm text-gray-600 mb-3">
-                    support@whatsappbot.com
+                    cyduck1107@gmail.com
                   </p>
-                  <button className="w-full bg-gray-800 text-white py-2 rounded-lg font-medium hover:bg-gray-900 transition-colors">
+                  <a href="mailto:cyduck1107@gmail.com" className="w-full bg-gray-800 text-white py-2 rounded-lg font-medium hover:bg-gray-900 transition-colors inline-block text-center">
                     Email Us
-                  </button>
+                  </a>
                 </div>
               </div>
               

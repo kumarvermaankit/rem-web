@@ -35,6 +35,12 @@ const Navbar = () => {
                   {item}
                 </a>
               ))}
+              <a
+                href="/privacy-policy"
+                className="bg-whatsapp text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-whatsapp-dark transition-colors"
+              >
+                Privacy Policy
+              </a>
             </div>
           </div>
 
@@ -62,6 +68,13 @@ const Navbar = () => {
                 {item}
               </a>
             ))}
+            <a
+              href="/privacy-policy"
+              className="bg-whatsapp text-white block px-3 py-2 rounded-md text-base font-medium text-center"
+              onClick={() => setIsOpen(false)}
+            >
+              Privacy Policy
+            </a>
           </div>
         </div>
       )}

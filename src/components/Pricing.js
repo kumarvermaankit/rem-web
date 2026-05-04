@@ -1,94 +1,26 @@
-import React, { useState } from 'react';
-import { Check, MessageCircle, Calendar, Users, Zap, Crown, Star } from 'lucide-react';
+import React from 'react';
+import { Check, MessageCircle, Users, Zap, Crown, Star } from 'lucide-react';
 
 const Pricing = () => {
-  const [billingCycle, setBillingCycle] = useState('monthly');
-  
   const plans = [
     {
       name: 'Free',
       description: 'Perfect for personal use',
-      price: billingCycle === 'monthly' ? 0 : 0,
+      price: 0,
       features: [
-        '10 reminders per month',
+        'Unlimited reminders',
         'Basic task management',
         'One user account',
         'Standard notifications',
-        'Email support'
-      ],
-      notIncluded: [
+        'Email support',
         'Recurring reminders',
-        'Priority support',
-        'Advanced analytics',
-        'Team collaboration'
-      ],
-      icon: MessageCircle,
-      color: 'bg-gray-100 text-gray-600',
-      buttonColor: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-      popular: false
-    },
-    {
-      name: 'Pro',
-      description: 'For power users and professionals',
-      price: billingCycle === 'monthly' ? 9.99 : 99,
-      features: [
-        'Unlimited reminders',
-        'Advanced task management',
-        'Recurring reminders',
-        'Priority notifications',
-        'Email & chat support',
-        'Basic analytics',
         'Calendar integration'
       ],
-      notIncluded: [
-        'Team collaboration',
-        'Advanced analytics',
-        'Custom integrations'
-      ],
-      icon: Calendar,
+      notIncluded: [],
+      icon: MessageCircle,
       color: 'bg-whatsapp-light text-whatsapp-dark',
       buttonColor: 'bg-whatsapp text-white hover:bg-whatsapp-dark',
       popular: true
-    },
-    {
-      name: 'Business',
-      description: 'For teams and organizations',
-      price: billingCycle === 'monthly' ? 29.99 : 299,
-      features: [
-        'Everything in Pro',
-        'Team collaboration (5 users)',
-        'Advanced analytics dashboard',
-        'Custom integrations',
-        'Priority support (24/7)',
-        'White-label options',
-        'API access',
-        'Custom workflows'
-      ],
-      notIncluded: [],
-      icon: Users,
-      color: 'bg-purple-100 text-purple-600',
-      buttonColor: 'bg-purple-600 text-white hover:bg-purple-700',
-      popular: false
-    },
-    {
-      name: 'Enterprise',
-      description: 'Custom solutions for large organizations',
-      price: 'Custom',
-      features: [
-        'Everything in Business',
-        'Unlimited users',
-        'Dedicated account manager',
-        'Custom development',
-        'SLA guarantee',
-        'On-premise deployment',
-        'Advanced security features',
-        'Custom training'
-      ],
-      notIncluded: [],
-      icon: Crown,
-      color: 'bg-gold-100 text-gold-600',
-      buttonColor: 'bg-gray-900 text-white hover:bg-gray-800',
-      popular: false
     }
   ];
 
@@ -127,38 +59,15 @@ const Pricing = () => {
             Simple, Transparent Pricing
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Choose the plan that fits your needs. Start free and upgrade as you grow.
+            Choose our free plan to get started with WhatsApp reminders and task management.
           </p>
-          
-          <div className="inline-flex bg-white rounded-lg p-1 shadow-sm">
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                billingCycle === 'monthly'
-                  ? 'bg-whatsapp text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBillingCycle('annual')}
-              className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                billingCycle === 'annual'
-                  ? 'bg-whatsapp text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Annual (Save 20%)
-            </button>
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="flex justify-center mb-16">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative bg-white rounded-2xl p-8 ${
+              className={`relative bg-white rounded-2xl p-8 max-w-md w-full ${
                 plan.popular
                   ? 'ring-2 ring-whatsapp shadow-xl transform scale-105'
                   : 'shadow-lg card-hover'
@@ -181,13 +90,8 @@ const Pricing = () => {
               
               <div className="mb-6">
                 <span className="text-4xl font-bold text-gray-900">
-                  {typeof plan.price === 'number' ? `$${plan.price}` : plan.price}
+                  {typeof plan.price === 'number' && plan.price === 0 ? 'Free' : `$${plan.price}`}
                 </span>
-                {typeof plan.price === 'number' && (
-                  <span className="text-gray-600 ml-2">
-                    /{billingCycle === 'monthly' ? 'month' : 'year'}
-                  </span>
-                )}
               </div>
               
               <ul className="space-y-3 mb-8">
@@ -208,7 +112,7 @@ const Pricing = () => {
               </ul>
               
               <button className={`w-full py-3 rounded-lg font-semibold transition-colors ${plan.buttonColor}`}>
-                {plan.price === 'Custom' ? 'Contact Sales' : plan.price === 0 ? 'Get Started' : 'Choose Plan'}
+                Get Started
               </button>
             </div>
           ))}

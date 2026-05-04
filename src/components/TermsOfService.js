@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, FileText, AlertCircle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 
 const TermsOfService = () => {
@@ -59,10 +60,10 @@ const TermsOfService = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <a href="/" className="inline-flex items-center text-whatsapp hover:text-whatsapp-dark mb-6">
+          <Link to="/" className="inline-flex items-center text-whatsapp hover:text-whatsapp-dark mb-6">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
-          </a>
+          </Link>
           
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Terms of Service
@@ -116,10 +117,10 @@ const TermsOfService = () => {
           </p>
           <div className="space-y-2">
             <p className="text-gray-700">
-              <strong>Email:</strong> legal@cyduck.com
+              <strong>Email:</strong> cyduck1107@gmail.com
             </p>
             <p className="text-gray-700">
-              <strong>WhatsApp:</strong> +1 (555) 123-4567
+              <strong>WhatsApp:</strong> +91 95554 18627
             </p>
           </div>
         </div>

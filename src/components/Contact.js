@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, Mail, Phone, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
+import { MessageCircle, Mail, CheckCircle, ArrowRight } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -29,39 +29,19 @@ const Contact = () => {
       icon: MessageCircle,
       title: 'WhatsApp Support',
       description: 'Get instant help via WhatsApp',
-      value: '+1 (555) 123-4567',
+      value: '+91 95554 18627',
       action: 'Start Chat'
     },
     {
       icon: Mail,
       title: 'Email Support',
       description: 'Send us a detailed message',
-      value: 'support@cyduck.com',
+      value: 'cyduck1107@gmail.com',
       action: 'Send Email'
-    },
-    {
-      icon: Phone,
-      title: 'Phone Support',
-      description: 'Mon-Fri, 9AM-6PM EST',
-      value: '+1 (555) 987-6543',
-      action: 'Call Now'
-    },
-    {
-      icon: MapPin,
-      title: 'Office Location',
-      description: 'Visit our headquarters',
-      value: '123 Tech Street, San Francisco, CA 94105',
-      action: 'Get Directions'
     }
   ];
 
-  const stats = [
-    { number: '50K+', label: 'Active Users' },
-    { number: '1M+', label: 'Reminders Sent' },
-    { number: '99.9%', label: 'Uptime' },
-    { number: '24/7', label: 'Support' }
-  ];
-
+  
   return (
     <section id="contact" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -176,7 +156,7 @@ const Contact = () => {
                     Thank You for Signing Up!
                   </h4>
                   <p className="text-gray-600 mb-3">
-                    Check your email for a message from support@cyduck.com to complete your setup.
+                    Check your email for a message from cyduck1107@gmail.com to complete your setup.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
@@ -211,43 +191,10 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-whatsapp-light to-green-50 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Why Choose WhatsAppBot?
-              </h3>
-              <div className="grid grid-cols-2 gap-6">
-                {stats.map((stat, index) => (
-                  <div key={index} className="text-center">
-                    <div className="text-3xl font-bold text-whatsapp-dark mb-1">
-                      {stat.number}
-                    </div>
-                    <div className="text-gray-700 text-sm">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                      </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Ready to Transform Your Productivity?
-          </h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Join thousands of users who have already made WhatsAppBot their personal assistant. 
-            Start your free trial today - no credit card required.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-whatsapp text-white px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-dark transition-colors flex items-center justify-center">
-              <MessageCircle className="mr-2 h-5 w-5" />
-              Start Free on WhatsApp
-            </button>
-            <button className="border-2 border-whatsapp text-whatsapp px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-light transition-colors">
-              Schedule Demo
-            </button>
-          </div>
-        </div>
-      </div>
+              </div>
     </section>
   );
 };
