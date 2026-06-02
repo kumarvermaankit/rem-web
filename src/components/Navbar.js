@@ -43,9 +43,15 @@ const Navbar = () => {
               </a>
               <a
                 href="/terms-of-service"
-                className="bg-whatsapp text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-whatsapp-dark transition-colors"
+                className="text-gray-700 hover:text-whatsapp px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Terms of Service
+              </a>
+              <a
+                href="/data-deletion"
+                className="bg-whatsapp text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-whatsapp-dark transition-colors"
+              >
+                Data Deletion
               </a>
             </div>
           </div>
@@ -83,10 +89,17 @@ const Navbar = () => {
             </a>
             <a
               href="/terms-of-service"
-              className="bg-whatsapp text-white block px-3 py-2 rounded-md text-base font-medium text-center"
+              className="text-gray-700 hover:text-whatsapp block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsOpen(false)}
             >
               Terms of Service
+            </a>
+            <a
+              href="/data-deletion"
+              className="bg-whatsapp text-white block px-3 py-2 rounded-md text-base font-medium text-center"
+              onClick={() => setIsOpen(false)}
+            >
+              Data Deletion
             </a>
           </div>
         </div>
