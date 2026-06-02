@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Clock, Calendar, CheckCircle, ArrowRight } from 'lucide-react';
+import { MessageCircle, Clock, Calendar, CheckCircle } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -21,14 +21,11 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button className="bg-white text-whatsapp-dark px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center">
+            <a href="#contact" className="bg-white text-whatsapp-dark px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center">
               <MessageCircle className="mr-2 h-5 w-5" />
               Get Started
-            </button>
-            <a href="#contact" className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition-colors flex items-center justify-center">
-              Contact Us
-              <ArrowRight className="ml-2 h-5 w-5" />
             </a>
+
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">

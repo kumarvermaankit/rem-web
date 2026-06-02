@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, MessageCircle, Clock, Shield, Users, Zap, HelpCircle, Calendar, Bell } from 'lucide-react';
+import { ChevronDown, ChevronUp, MessageCircle, Clock, Shield, Zap, HelpCircle, Bell } from 'lucide-react';
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -18,12 +18,6 @@ const FAQ = () => {
       category: "Security"
     },
     {
-      question: "Can I use the bot for team collaboration?",
-      answer: "Yes! Our Business and Enterprise plans support team collaboration. You can share reminders, assign tasks to team members, and track collective progress.",
-      icon: Users,
-      category: "Teams"
-    },
-    {
       question: "What types of reminders can I set?",
       answer: "You can set one-time reminders, recurring reminders (daily, weekly, monthly), location-based reminders, and even complex schedules. Just type naturally like 'Remind me to call mom every Sunday at 3pm'.",
       icon: Clock,
@@ -34,12 +28,6 @@ const FAQ = () => {
       answer: "Our AI understands natural language with 95%+ accuracy. It can parse dates, times, recurring patterns, and even complex scheduling instructions automatically.",
       icon: Zap,
       category: "Technology"
-    },
-    {
-      question: "Can I integrate with my existing calendar?",
-      answer: "Yes! Pro plans and above support calendar integration with Google Calendar, Outlook, and Apple Calendar. Your reminders will sync automatically.",
-      icon: Calendar,
-      category: "Integrations"
     },
     {
       question: "What happens if I miss a reminder?",
@@ -55,7 +43,7 @@ const FAQ = () => {
     }
   ];
 
-  const categories = ["Getting Started", "Security", "Teams", "Features", "Technology", "Integrations", "Billing"];
+  const categories = ["Getting Started", "Security", "Features", "Technology", "Billing"];
 
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
