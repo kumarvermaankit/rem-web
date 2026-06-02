@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, ListTodo, Lock, Database, Smartphone, Bell, RefreshCw, CheckCircle, Bookmark, Search, TrendingUp, Zap, MessageSquare } from 'lucide-react';
+import { Clock, ListTodo, CheckCircle, Bookmark, TrendingUp, Zap } from 'lucide-react';
 
 const features = [
   {
