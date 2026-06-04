@@ -16,7 +16,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <MessageCircle className="h-6 w-6 text-whatsapp mr-2" />
-            <span className="font-bold text-lg">Cyduck</span>
+            <span className="font-bold text-lg">Ping</span>
           </div>
           
           <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
@@ -45,7 +45,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-800 mt-6 pt-6 text-center">
           <div className="text-gray-400 text-sm">
-            © 2024 Cyduck. All rights reserved.
+            © 2024 Ping. All rights reserved.
           </div>
         </div>
       </div>

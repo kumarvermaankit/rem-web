@@ -74,7 +74,7 @@ const PrivacyPolicy = () => {
           
           <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
             <p className="text-gray-700 leading-relaxed">
-              At Cyduck, we are committed to protecting your privacy and ensuring the security of your personal information. 
+              At Ping, we are committed to protecting your privacy and ensuring the security of your personal information. 
               This Privacy Policy explains how we collect, use, and safeguard your data when you use our WhatsApp reminder 
               and assistant bot service.
             </p>

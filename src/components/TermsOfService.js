@@ -8,7 +8,7 @@ const TermsOfService = () => {
       icon: FileText,
       title: "Service Agreement",
       content: [
-        "By using Cyduck's WhatsApp reminder and assistant bot, you agree to these terms of service",
+        "By using Ping's WhatsApp reminder and assistant bot, you agree to these terms of service",
         "The service is provided 'as is' and may be subject to temporary interruptions",
         "We reserve the right to modify or discontinue the service with reasonable notice",
         "Your continued use of the service constitutes acceptance of any changes"
@@ -74,7 +74,7 @@ const TermsOfService = () => {
           
           <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
             <p className="text-gray-700 leading-relaxed">
-              Welcome to Cyduck's WhatsApp reminder and assistant bot service. These Terms of Service govern 
+              Welcome to Ping's WhatsApp reminder and assistant bot service. These Terms of Service govern 
               your use of our service and outline the rights and responsibilities of both parties. 
               By using our service, you agree to comply with these terms.
             </p>
@@ -105,7 +105,7 @@ const TermsOfService = () => {
         <div className="mt-12 bg-white rounded-lg p-6 shadow-sm">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Disclaimer</h2>
           <p className="text-gray-700 mb-4">
-            Cyduck provides this service on an 'as is' basis. We make no warranties regarding the reliability, 
+            Ping provides this service on an 'as is' basis. We make no warranties regarding the reliability, 
             accuracy, or availability of the service. Your use of the service is at your own risk.
           </p>
         </div>

@@ -21,7 +21,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <MessageCircle className="h-8 w-8 text-whatsapp mr-2" />
-            <span className="font-bold text-xl text-gray-900">Cyduck</span>
+            <span className="font-bold text-xl text-gray-900">Ping</span>
           </div>
 
           <div className="hidden md:block">

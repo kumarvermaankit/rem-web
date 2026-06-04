@@ -13,11 +13,11 @@ const Hero = () => {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Cyduck WhatsApp Assistant
+            Ping WhatsApp Assistant
           </h1>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-            Your intelligent WhatsApp reminder and assistant bot by Cyduck. Set reminders, get notifications, and manage your tasks - all through WhatsApp.
+            Your intelligent WhatsApp reminder and assistant bot by Ping. Set reminders, get notifications, and manage your tasks - all through WhatsApp.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
