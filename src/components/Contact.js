@@ -50,7 +50,7 @@ const Contact = () => {
             Get Started Today
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Join thousands of users who never miss important events. Start your free trial or contact us for enterprise solutions.
+            Start using Ping today — just send a message on WhatsApp. No sign-up, no download needed.
           </p>
         </div>
 
@@ -156,7 +156,7 @@ const Contact = () => {
                     Thank You for Signing Up!
                   </h4>
                   <p className="text-gray-600 mb-3">
-                    Check your email for a message from cyduck1107@gmail.com to complete your setup.
+                    Check your email for a message from cyduck1107@gmail.com to complete your setup. Or just message Ping on WhatsApp to get started instantly.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}

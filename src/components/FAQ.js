@@ -6,38 +6,38 @@ const FAQ = () => {
 
   const faqs = [
     {
-      question: "How do I start using the WhatsApp bot?",
-      answer: "Simply click 'Start Free Trial' on our website, enter your phone number, and you'll receive a WhatsApp message to start the setup process. It takes less than 2 minutes to get started!",
+      question: "How do I start using Ping?",
+      answer: "Just send a message to Ping on WhatsApp — that's it. No app to download, no account to create. Ping will introduce itself and you can start setting reminders, creating lists, and more right away.",
       icon: MessageCircle,
       category: "Getting Started"
     },
     {
       question: "Is my data secure and private?",
-      answer: "Absolutely! We use end-to-end encryption and never share your personal information with third parties. All your reminders and tasks are stored securely and can be deleted at any time.",
+      answer: "Absolutely. Ping uses end-to-end encryption and never shares your personal information with third parties. All your reminders, lists, and notes are stored securely and can be deleted anytime.",
       icon: Shield,
       category: "Security"
     },
     {
       question: "What types of reminders can I set?",
-      answer: "You can set one-time reminders, recurring reminders (daily, weekly, monthly), location-based reminders, and even complex schedules. Just type naturally like 'Remind me to call mom every Sunday at 3pm'.",
+      answer: "One-time reminders, recurring (daily, weekly, monthly, custom intervals), and even reminders tied to specific items in your to-do lists. Just type naturally like 'remind me to call mom every Sunday at 3pm'.",
       icon: Clock,
       category: "Features"
     },
     {
-      question: "How accurate is the natural language processing?",
-      answer: "Our AI understands natural language with 95%+ accuracy. It can parse dates, times, recurring patterns, and even complex scheduling instructions automatically.",
+      question: "How does Ping understand natural language?",
+      answer: "Ping is built on AI that understands natural speech with high accuracy. It can parse dates, times, recurring patterns, and complex instructions — just say it like you would to a person.",
       icon: Zap,
       category: "Technology"
     },
     {
       question: "What happens if I miss a reminder?",
-      answer: "The bot will automatically retry sending the reminder up to 3 times at 15-minute intervals. You can also set custom retry preferences in your settings.",
+      answer: "Ping automatically retries up to 3 times at 15-minute intervals. You can snooze from the notification itself — no need to type anything.",
       icon: Bell,
       category: "Features"
     },
     {
       question: "Can I cancel my subscription anytime?",
-      answer: "Absolutely! You can cancel your subscription at any time with no penalties. Your service will continue until the end of your billing period.",
+      answer: "Yes, you can cancel anytime with no penalties. Your service continues until the end of your billing period.",
       icon: HelpCircle,
       category: "Billing"
     }
@@ -104,7 +104,7 @@ const FAQ = () => {
                 Still have questions?
               </h3>
               <p className="text-gray-700 mb-6">
-                Can't find the answer you're looking for? Our support team is here to help.
+                Can't find the answer you're looking for? Message Ping on WhatsApp or reach out to our team.
               </p>
               
               <div className="space-y-4">

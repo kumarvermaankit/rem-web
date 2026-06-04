@@ -5,16 +5,15 @@ const Pricing = () => {
   const plans = [
     {
       name: 'Free',
-      description: 'Perfect for personal use',
+      description: 'Everything you need, totally free',
       price: 0,
       features: [
         'Unlimited reminders',
-        'Basic task management',
-        'One user account',
-        'Standard notifications',
-        'Email support',
+        'Todo lists with per-item reminders',
+        'Personal notes vault',
+        'Live data queries (stocks, cricket)',
         'Recurring reminders',
-        'Calendar integration'
+        'Daily morning prompt'
       ],
       notIncluded: [],
       icon: MessageCircle,
@@ -27,7 +26,7 @@ const Pricing = () => {
   const useCases = [
     {
       title: 'Students',
-      description: 'Never miss assignment deadlines or exam dates',
+      description: 'Never miss assignments or exam deadlines',
       icon: Star,
       recommended: 'Free'
     },
@@ -59,7 +58,7 @@ const Pricing = () => {
             Simple, Transparent Pricing
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Choose our free plan to get started with WhatsApp reminders and task management.
+            Ping is free to use. No hidden charges, no trial period — just chat.
           </p>
         </div>
 
@@ -120,7 +119,7 @@ const Pricing = () => {
 
         <div className="bg-white rounded-2xl p-8 shadow-lg">
           <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-            Who is this for?
+            Who is Ping for?
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {useCases.map((useCase, index) => (

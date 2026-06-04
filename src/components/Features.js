@@ -61,10 +61,10 @@ const Features = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Personal Reminder Assistant
+            What Ping Can Do
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Your all-in-one WhatsApp assistant — reminders, todos, notes, live data, and more. No setup required.
+            Reminders, to-do lists, notes, live data — Ping handles it all over WhatsApp. No setup, just chat.
           </p>
         </div>
 

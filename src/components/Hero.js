@@ -13,11 +13,11 @@ const Hero = () => {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Ping WhatsApp Assistant
+            Meet Ping
           </h1>
           
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-            Your intelligent WhatsApp reminder and assistant bot by Ping. Set reminders, get notifications, and manage your tasks - all through WhatsApp.
+            Your intelligent WhatsApp assistant. Ping handles reminders, to-do lists, notes, and live data — all through chat. No app to install, no account to create.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -36,7 +36,7 @@ const Hero = () => {
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg">
               <Calendar className="h-8 w-8 text-white mb-4 mx-auto" />
-              <h3 className="text-white font-semibold text-lg mb-2">Task Management</h3>
+              <h3 className="text-white font-semibold text-lg mb-2">Todo Lists</h3>
               <p className="text-white/80">Create, track, and complete tasks via WhatsApp</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-lg">
