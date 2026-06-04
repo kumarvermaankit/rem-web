@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, MessageCircle, Users, Zap, Crown, Star } from 'lucide-react';
+import { Check, MessageCircle, Zap, Star } from 'lucide-react';
 
 const Pricing = () => {
   const plans = [
@@ -34,19 +34,7 @@ const Pricing = () => {
       title: 'Professionals',
       description: 'Manage meetings, deadlines, and personal tasks',
       icon: Zap,
-      recommended: 'Pro'
-    },
-    {
-      title: 'Small Teams',
-      description: 'Collaborate on projects and shared deadlines',
-      icon: Users,
-      recommended: 'Business'
-    },
-    {
-      title: 'Large Organizations',
-      description: 'Enterprise-grade task management and automation',
-      icon: Crown,
-      recommended: 'Enterprise'
+      recommended: 'Free'
     }
   ];
 
@@ -121,7 +109,7 @@ const Pricing = () => {
           <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Who is Ping for?
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {useCases.map((useCase, index) => (
               <div key={index} className="text-center">
                 <div className="bg-gray-100 p-3 rounded-lg inline-block mb-3">
