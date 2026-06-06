@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, MessageCircle, Clock, Shield, Zap, HelpCircle, Bell } from 'lucide-react';
+import { ChevronDown, MessageCircle, Clock, Shield, Zap, HelpCircle, Bell } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const FAQ = () => {
@@ -43,8 +43,6 @@ const FAQ = () => {
       category: "Billing"
     }
   ];
-
-  const categories = ["Getting Started", "Security", "Features", "Technology", "Billing"];
 
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
