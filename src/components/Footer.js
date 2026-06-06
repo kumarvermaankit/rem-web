@@ -1,51 +1,71 @@
 import React from 'react';
-import { MessageCircle, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 const Footer = () => {
-  const footerLinks = {
-    legal: [
-      { name: 'Privacy Policy', href: '/privacy-policy' },
-      { name: 'Terms of Service', href: '/terms-of-service' }
-    ]
-  };
+  const footerLinks = [
+    { name: 'Home', href: '#hero' },
+    { name: 'Features', href: '#features' },
+    { name: 'Pricing', href: '#pricing' },
+    { name: 'FAQ', href: '#faq' },
+    { name: 'Contact', href: '#contact' },
+  ];
 
+  const legalLinks = [
+    { name: 'Privacy Policy', href: '/privacy-policy' },
+    { name: 'Terms of Service', href: '/terms-of-service' },
+    { name: 'Data Deletion', href: '/data-deletion' },
+  ];
 
   return (
     <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mb-4 md:mb-0">
-            <MessageCircle className="h-6 w-6 text-whatsapp mr-2" />
-            <span className="font-bold text-lg">Ping</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div>
+            <div className="flex items-center mb-4">
+              <img src="/logo.png" alt="Ping" className="h-8 brightness-0 invert mr-2" />
+              <span className="font-bold text-lg">Ping</span>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Your intelligent WhatsApp assistant. Reminders, to-do lists, notes, and live data — all through chat.
+            </p>
           </div>
-          
-          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
+
+          <div>
+            <h4 className="font-semibold text-white mb-4">Quick Links</h4>
+            <ul className="space-y-2">
+              {footerLinks.map((link) => (
+                <li key={link.name}>
+                  <a href={link.href} className="text-gray-400 hover:text-white text-sm transition-colors duration-300">
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-white mb-4">Legal</h4>
+            <ul className="space-y-2">
+              {legalLinks.map((link) => (
+                <li key={link.name}>
+                  <a href={link.href} className="text-gray-400 hover:text-white text-sm transition-colors duration-300">
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800">
+          <div className="flex items-center space-x-4 mb-4 md:mb-0">
             <div className="flex items-center text-gray-400 text-sm">
               <Mail className="h-4 w-4 mr-2" />
               <span>cyduck1107@gmail.com</span>
             </div>
-            <div className="flex items-center text-gray-400 text-sm">
-              <MessageCircle className="h-4 w-4 mr-2" />
-              <span>+91 95554 18627</span>
-            </div>
           </div>
-          
-          <div className="flex space-x-4">
-            {footerLinks.legal.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                className="text-gray-400 hover:text-white text-sm transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
-        </div>
-        
-        <div className="border-t border-gray-800 mt-6 pt-6 text-center">
           <div className="text-gray-400 text-sm">
-            © 2024 Ping. All rights reserved.
+            © 2025 Ping. All rights reserved.
           </div>
         </div>
       </div>

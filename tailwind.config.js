@@ -6,9 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'whatsapp': '#25D366',
-        'whatsapp-dark': '#128C7E',
-        'whatsapp-light': '#DCF8C6',
+        'ping': '#2F88FF',
+        'ping-dark': '#1A6FE0',
+        'ping-light': '#49A1FF',
+        'ping-lighter': '#EBF4FF',
       },
     },
   },

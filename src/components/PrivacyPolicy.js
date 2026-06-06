@@ -60,7 +60,7 @@ const PrivacyPolicy = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <Link to="/" className="inline-flex items-center text-whatsapp hover:text-whatsapp-dark mb-6">
+          <Link to="/" className="inline-flex items-center text-ping hover:text-ping-dark mb-6">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
           </Link>
@@ -84,15 +84,15 @@ const PrivacyPolicy = () => {
           {sections.map((section, index) => (
             <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
               <div className="flex items-center mb-4">
-                <div className="bg-whatsapp-light p-3 rounded-lg mr-4">
-                  <section.icon className="h-6 w-6 text-whatsapp-dark" />
+                <div className="bg-ping-lighter p-3 rounded-lg mr-4">
+                  <section.icon className="h-6 w-6 text-ping-dark" />
                 </div>
                 <h2 className="text-xl font-semibold text-gray-900">{section.title}</h2>
               </div>
               <ul className="space-y-2">
                 {section.content.map((item, itemIndex) => (
                   <li key={itemIndex} className="flex items-start">
-                    <div className="h-2 w-2 bg-whatsapp rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="h-2 w-2 bg-ping rounded-full mt-2 mr-3 flex-shrink-0"></div>
                     <p className="text-gray-700">{item}</p>
                   </li>
                 ))}
