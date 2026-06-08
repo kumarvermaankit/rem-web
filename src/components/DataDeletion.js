@@ -1,19 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Trash2, MessageCircle, Mail, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Trash2, Mail, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const DataDeletion = () => {
   const steps = [
     {
-      icon: MessageCircle,
-      title: "Option 1: Send a WhatsApp Message",
-      description: "Simply open your chat with our WhatsApp bot and type \"delete my account\". That's it — we'll receive your request instantly.",
-      color: "bg-green-100 text-green-600"
-    },
-    {
       icon: Mail,
-      title: "Option 2: Email Us",
-      description: "Send an email to support@yourdomain.com from the email address associated with your account. Include your phone number so we can locate your data.",
+      title: "Send an Email",
+      description: "Email us at heypingchat@gmail.com with your WhatsApp phone number and we'll process your deletion request.",
       color: "bg-blue-100 text-blue-600"
     },
     {
@@ -25,7 +19,7 @@ const DataDeletion = () => {
     {
       icon: CheckCircle,
       title: "Confirmation",
-      description: "You will receive a confirmation message via WhatsApp or email once the deletion process is complete and all your data has been removed.",
+      description: "You will receive a confirmation email once the deletion process is complete and all your data has been removed.",
       color: "bg-teal-100 text-teal-600"
     }
   ];
@@ -57,13 +51,12 @@ const DataDeletion = () => {
           
           <div className="bg-white rounded-lg p-6 shadow-sm mb-8">
             <p className="text-gray-700 leading-relaxed">
-              We respect your right to control your personal data. If you wish to delete your account and remove all 
-              associated information from our systems, you can do so easily using either of the methods below.
+              We respect your right to control your personal data. To request deletion of your account and all associated data, email us with your WhatsApp phone number.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {steps.map((step, index) => (
             <div key={index} className="bg-white rounded-lg p-6 shadow-sm">
               <div className={`p-3 rounded-lg inline-block mb-4 ${step.color}`}>

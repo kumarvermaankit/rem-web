@@ -10,8 +10,7 @@ const PrivacyPolicy = () => {
       content: [
         "Personal Information: Name, email address, and phone number when you register for our service",
         "Usage Data: How you interact with our WhatsApp bot, including reminders set and tasks created",
-        "Technical Data: IP address, device information, and browser type for service optimization",
-        "Communication Data: WhatsApp messages exchanged with our bot for service delivery"
+"Communication Data: WhatsApp messages exchanged with our bot for service delivery"
       ]
     },
     {
