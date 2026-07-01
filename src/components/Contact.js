@@ -1,190 +1,160 @@
-import React, { useState } from 'react';
-import { MessageCircle, Mail, CheckCircle, ArrowRight } from 'lucide-react';
+import React from 'react';
+import { MessageCircle, Mail, ArrowRight, Check, Sparkles } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-    plan: 'free'
-  });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const steps = [
+    { icon: MessageCircle, text: 'Message Ping on WhatsApp' },
+    { icon: Check, text: 'Ping introduces itself instantly' },
+    { icon: Sparkles, text: 'Start setting reminders & lists' },
+  ];
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
-
-  const contactInfo = [
+  const contactMethods = [
     {
       icon: MessageCircle,
-      title: 'WhatsApp Support',
-      description: 'Get instant help via WhatsApp',
-      value: '+91 95554 18627',
-      action: 'Start Chat'
+      title: 'Talk to Ping',
+      subtitle: 'Send a message to start',
+      value: '+91 80765 69811',
+      action: 'Message Now',
+      href: 'tel:+918076569811',
+      primary: true,
     },
     {
       icon: Mail,
       title: 'Email Support',
-      description: 'Send us a detailed message',
-      value: 'cyduck1107@gmail.com',
-      action: 'Send Email'
-    }
+      subtitle: 'For help & inquiries',
+      value: 'heypingchat@gmail.com',
+      action: 'Send Email',
+      href: 'mailto:heypingchat@gmail.com',
+      primary: false,
+    },
   ];
 
   return (
-    <section id="contact" className="py-24 bg-gray-50 relative overflow-hidden">
+    <section id="contact" className="py-24 md:py-32 bg-gray-50 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-ping/20 to-transparent" />
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-ping/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-ping/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
-          <div className="text-center mb-16">
-            <span className="inline-block text-ping font-semibold text-sm tracking-widest uppercase mb-4">Get Started</span>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Start Using Ping Today
+          <div className="text-center mb-16 md:mb-20">
+            <div className="inline-flex items-center gap-2 bg-ping-lighter rounded-full px-4 py-1.5 mb-6">
+              <Sparkles className="w-4 h-4 text-ping" />
+              <span className="text-ping font-medium text-sm tracking-wide">Get Started</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-900 mb-5 tracking-tight">
+              Start Using{' '}
+              <span className="gradient-text">Ping</span> Today
             </h2>
-            <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-              Start using Ping today — just send a message on WhatsApp. No sign-up, no download needed.
+            <p className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
+              No sign-up, no download needed. Just send a message on WhatsApp and you're all set.
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <ScrollReveal delay={1}>
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Start Your Free Trial
-              </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-12 max-w-5xl mx-auto">
+          <div className="lg:col-span-3">
+            <ScrollReveal delay={1}>
+              <div className="bg-white rounded-2xl p-8 md:p-10 shadow-xl border border-gray-100">
+                <h3 className="text-2xl font-display font-bold text-gray-900 mb-8">
+                  How to get started
+                </h3>
 
-              {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-ping focus:border-transparent transition-all duration-300 outline-none"
-                      placeholder="John Doe"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-ping focus:border-transparent transition-all duration-300 outline-none"
-                      placeholder="john@example.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number (WhatsApp)</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-ping focus:border-transparent transition-all duration-300 outline-none"
-                      placeholder="+1 (555) 123-4567"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Plan</label>
-                    <select
-                      name="plan"
-                      value={formData.plan}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-ping focus:border-transparent transition-all duration-300 outline-none"
-                    >
-                      <option value="free">Free Plan</option>
-                      <option value="pro">Pro Plan ($9.99/month)</option>
-                      <option value="business">Business Plan ($29.99/month)</option>
-                      <option value="enterprise">Enterprise (Custom)</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Message (Optional)</label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-ping focus:border-transparent transition-all duration-300 outline-none"
-                      placeholder="Tell us about your needs..."
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-ping text-white py-3.5 rounded-xl font-semibold hover:bg-ping-dark transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center"
-                  >
-                    Get Started
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </button>
-                </form>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="bg-green-100 p-4 rounded-full inline-block mb-4">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
-                  </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">
-                    Thank You for Signing Up!
-                  </h4>
-                  <p className="text-gray-500 mb-3">
-                    Check your email for a message from cyduck1107@gmail.com to complete your setup. Or just message Ping on WhatsApp to get started instantly.
-                  </p>
-                  <button
-                    onClick={() => setIsSubmitted(false)}
-                    className="bg-ping text-white px-6 py-2 rounded-lg font-medium hover:bg-ping-dark transition-all duration-300"
-                  >
-                    Sign Up Another User
-                  </button>
-                </div>
-              )}
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={2}>
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {contactInfo.map((info, index) => (
-                    <div key={index} className="text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 hover:-translate-y-1">
-                      <div className="bg-ping-lighter p-3 rounded-xl inline-block mb-3">
-                        <info.icon className="h-6 w-6 text-ping" />
+                <div className="space-y-0">
+                  {steps.map((step, index) => (
+                    <div key={index} className="flex items-start gap-5 pb-8 relative last:pb-0">
+                      {index < steps.length - 1 && (
+                        <div className="absolute left-5 top-14 bottom-0 w-px bg-gradient-to-b from-ping/30 to-transparent" />
+                      )}
+                      <div className="relative">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ping to-ping-dark flex items-center justify-center shadow-lg">
+                          <step.icon className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-white border-2 border-ping flex items-center justify-center">
+                          <span className="text-xs font-bold text-ping">{index + 1}</span>
+                        </div>
                       </div>
-                      <h4 className="font-semibold text-gray-900 mb-1">{info.title}</h4>
-                      <p className="text-sm text-gray-500 mb-2">{info.description}</p>
-                      <p className="text-gray-900 font-medium mb-3">{info.value}</p>
-                      <span className="text-ping hover:text-ping-dark font-medium text-sm cursor-pointer transition-colors">
-                        {info.action} →
-                      </span>
+                      <div className="pt-1.5">
+                        <p className="text-gray-900 font-medium">{step.text}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
+
+                <div className="mt-8 p-5 bg-gradient-to-r from-ping-lighter to-blue-50 rounded-xl border border-ping/10">
+                  <div className="flex items-start gap-3">
+                    <MessageCircle className="h-5 w-5 text-ping mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      <strong className="text-gray-900">Pro tip:</strong> Save Ping's WhatsApp number to your contacts so you can start a conversation anytime.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
+
+          <div className="lg:col-span-2">
+            <ScrollReveal delay={2}>
+              <div className="space-y-4">
+                {contactMethods.map((method, index) => (
+                  <a
+                    key={index}
+                    href={method.href}
+                    className={`group block rounded-2xl p-6 transition-all duration-300 ${
+                      method.primary
+                        ? 'bg-gradient-to-br from-ping to-ping-dark text-white shadow-xl hover:shadow-2xl hover:-translate-y-0.5'
+                        : 'bg-white border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-0.5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+                          method.primary ? 'bg-white/20' : 'bg-ping-lighter'
+                        }`}
+                      >
+                        <method.icon className={`h-6 w-6 ${method.primary ? 'text-white' : 'text-ping'}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className={`font-semibold ${method.primary ? 'text-white' : 'text-gray-900'}`}>
+                          {method.title}
+                        </div>
+                        <div className={`text-xs mt-0.5 ${method.primary ? 'text-white/70' : 'text-gray-400'}`}>
+                          {method.subtitle}
+                        </div>
+                        <div className={`text-sm mt-0.5 truncate ${method.primary ? 'text-white/80' : 'text-gray-500'}`}>
+                          {method.value}
+                        </div>
+                      </div>
+                      <ArrowRight
+                        className={`h-5 w-5 transition-all duration-300 group-hover:translate-x-1 ${
+                          method.primary ? 'text-white' : 'text-gray-400 group-hover:text-ping'
+                        }`}
+                      />
+                    </div>
+                  </a>
+                ))}
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                  <h4 className="font-semibold text-gray-900 mb-3 text-sm">Why Ping?</h4>
+                  <ul className="space-y-2.5">
+                    {[
+                      'No app installation needed',
+                      'No account creation required',
+                      'Works on any phone',
+                      'Completely free',
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-gray-600">
+                        <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>

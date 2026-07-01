@@ -107,10 +107,10 @@ const PrivacyPolicy = () => {
           </p>
           <div className="space-y-2">
             <p className="text-gray-700">
-              <strong>Email:</strong> cyduck1107@gmail.com
+              <strong>Email:</strong> heypingchat@gmail.com
             </p>
             <p className="text-gray-700">
-              <strong>WhatsApp:</strong> +91 95554 18627
+              <strong>WhatsApp:</strong> +91 80765 69811
             </p>
           </div>
         </div>

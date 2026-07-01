@@ -26,7 +26,7 @@ function HomePage() {
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white font-body">
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />

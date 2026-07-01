@@ -9,10 +9,8 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-
       const sections = ['hero', 'features', 'pricing', 'faq', 'contact'];
       const scrollPos = window.scrollY + 150;
-
       for (const id of sections) {
         const el = document.getElementById(id);
         if (el && scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
@@ -33,63 +31,72 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white/80 backdrop-blur-sm'}`} role="navigation" aria-label="Main navigation">
+    <nav
+      className={`fixed w-full z-50 transition-all duration-500 ${
+        scrolled
+          ? 'bg-white/90 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-gray-100'
+          : 'bg-white/80 backdrop-blur-sm border-b border-gray-100/50'
+      }`}
+      role="navigation"
+      aria-label="Main navigation"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <a href="#hero" className="flex items-center" aria-label="Ping home">
-            <img src="/logo.png" alt="Ping" className="h-10 transition-transform duration-300 hover:scale-105" />
+        <div className="flex justify-between items-center h-16 md:h-20">
+          <a href="#hero" className="flex items-center gap-2 group" aria-label="Ping home">
+            <img src="/logo.png" alt="Ping" className={`h-9 md:h-10 transition-all duration-300`} />
+            <span className="font-display font-bold text-lg text-gray-900 transition-colors duration-300">
+              Ping
+            </span>
           </a>
 
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
+          <div className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    activeSection === item.href.slice(1)
+                      ? 'bg-ping-lighter text-ping'
+                      : 'text-gray-600 hover:text-ping hover:bg-gray-50'
+                  }`}
+                >
+                  {item.name}
+                </a>
+              ))}
+              <div className="h-5 w-px bg-gray-200 mx-2" />
               <a
-                key={item.name}
-                href={item.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeSection === item.href.slice(1)
-                    ? 'bg-ping-lighter text-ping'
-                    : 'text-gray-600 hover:text-ping hover:bg-gray-50'
-                }`}
+                href="/privacy-policy"
+                className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-ping transition-colors duration-300"
               >
-                {item.name}
+                Privacy
               </a>
-            ))}
-            <div className="h-6 w-px bg-gray-200 mx-2" />
-            <a
-              href="/privacy-policy"
-              className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ping transition-colors duration-300"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="/terms-of-service"
-              className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-ping transition-colors duration-300"
-            >
-              Terms
-            </a>
-            <a
-              href="/data-deletion"
-              className="bg-ping text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-ping-dark transition-all duration-300 hover:shadow-lg"
-            >
-              Data Deletion
-            </a>
+              <a
+                href="/terms-of-service"
+                className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-ping transition-colors duration-300"
+              >
+                Terms
+              </a>
+              <a
+                href="/data-deletion"
+                className="ml-2 px-4 py-2 rounded-lg text-sm font-medium bg-ping text-white hover:bg-ping-dark shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                Data Deletion
+              </a>
           </div>
 
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-600 hover:text-ping p-2 transition-colors"
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={isOpen}
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
 
       {isOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg">
+        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-xl">
           <div className="px-4 pt-2 pb-4 space-y-1">
             {navItems.map((item) => (
               <a
@@ -108,14 +115,14 @@ const Navbar = () => {
             <div className="h-px bg-gray-100 my-2" />
             <a
               href="/privacy-policy"
-              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-600 hover:text-ping hover:bg-gray-50"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-500 hover:text-ping hover:bg-gray-50"
               onClick={() => setIsOpen(false)}
             >
               Privacy Policy
             </a>
             <a
               href="/terms-of-service"
-              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-600 hover:text-ping hover:bg-gray-50"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-500 hover:text-ping hover:bg-gray-50"
               onClick={() => setIsOpen(false)}
             >
               Terms of Service
