@@ -16,7 +16,7 @@ const Contact = () => {
       subtitle: 'Send a message to start',
       value: '+91 80765 69811',
       action: 'Message Now',
-      href: 'tel:+918076569811',
+      href: 'https://wa.me/918076569811',
       primary: true,
     },
     {

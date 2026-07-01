@@ -39,7 +39,7 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-4 mt-6">
               <a
-                href="tel:+918076569811"
+                href="https://wa.me/918076569811"
                 className="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-ping/20 transition-all duration-300 group"
                 aria-label="Message Ping on WhatsApp"
               >
@@ -91,7 +91,7 @@ const Footer = () => {
             <h4 className="font-semibold text-white text-sm mb-4 tracking-wider uppercase">Talk to Ping</h4>
             <ul className="space-y-3">
               <li>
-                <a href="tel:+918076569811" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">
+                <a href="https://wa.me/918076569811" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">
                   Message on WhatsApp
                 </a>
               </li>

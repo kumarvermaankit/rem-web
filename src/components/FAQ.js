@@ -128,7 +128,7 @@ const FAQ = () => {
 
                 <div className="space-y-3">
                   <a
-                    href="tel:+918076569811"
+                    href="https://wa.me/918076569811"
                     className="group flex items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 hover:border-ping/20 hover:shadow-md transition-all duration-300"
                   >
                     <div className="w-10 h-10 rounded-lg bg-ping-lighter flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
