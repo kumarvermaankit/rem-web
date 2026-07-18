@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, Phone, Mail } from 'lucide-react';
+import { Check, Star, Sparkles, MessageCircle, ArrowUpRight } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
@@ -82,9 +82,6 @@ const renderStars = (count) => {
 
 const Pricing = () => {
   const [country, setCountry] = useState('IN');
-  const [checkoutPlan, setCheckoutPlan] = useState(null);
-  const [checkoutPhone, setCheckoutPhone] = useState('');
-  const [checkoutEmail, setCheckoutEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const currency = getCurrency(country);
 
@@ -92,39 +89,14 @@ const Pricing = () => {
     setCountry(getCountry());
   }, []);
 
-  const openCheckout = (planId) => {
-    setCheckoutPlan(planId);
-    setCheckoutPhone('');
-    setCheckoutEmail('');
-  };
-
-  const closeCheckout = () => {
-    setCheckoutPlan(null);
-    setSubmitting(false);
-  };
-
-  const handleRazorpay = async (e) => {
-    e.preventDefault();
-    if (!checkoutPhone && !checkoutEmail) return;
+  const handleRazorpay = async (planId) => {
     setSubmitting(true);
 
     try {
-      const userRes = await fetch('/razorpay/find-or-create-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: checkoutPhone, email: checkoutEmail }),
-      });
-      const userData = await userRes.json();
-      if (!userData.success) {
-        alert('Could not identify user. Please try again.');
-        setSubmitting(false);
-        return;
-      }
-
       const orderRes = await fetch('/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: checkoutPlan, country }),
+        body: JSON.stringify({ planId, country }),
       });
       const orderData = await orderRes.json();
       if (!orderData.success) {
@@ -133,7 +105,7 @@ const Pricing = () => {
         return;
       }
 
-      const planName = plans.find(p => p.id === checkoutPlan).name;
+      const planName = plans.find(p => p.id === planId).name;
 
       const options = {
         key: orderData.keyId,
@@ -151,17 +123,14 @@ const Pricing = () => {
               razorpayPaymentId: response.razorpay_payment_id,
               razorpayOrderId: response.razorpay_order_id,
               razorpaySignature: response.razorpay_signature,
-              planId: checkoutPlan,
-              userId: userData.userId,
+              planId,
               amount: orderData.amount,
               currency: orderData.currency,
             }),
           }).then(() => {
             alert(`Payment successful! Welcome to Ping ${planName}`);
-            closeCheckout();
           });
         },
-        prefill: { contact: checkoutPhone, email: checkoutEmail },
         theme: { color: '#2F88FF' },
         modal: { ondismiss: function () { setSubmitting(false); } },
       };
@@ -253,14 +222,15 @@ const Pricing = () => {
                     </ul>
 
                     <button
-                      onClick={() => openCheckout(plan.id)}
-                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2 text-sm ${
+                      onClick={() => handleRazorpay(plan.id)}
+                      disabled={submitting}
+                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
                         plan.popular
                           ? 'bg-gradient-to-r from-ping to-ping-dark text-white hover:shadow-xl hover:shadow-ping/25 hover:-translate-y-0.5'
                           : 'bg-gray-50 text-gray-900 border border-gray-200 hover:border-ping/30 hover:bg-ping-lighter/50 hover:-translate-y-0.5'
                       }`}
                     >
-                      Subscribe - {SYMBOL}{displayPrice}/mo
+                      {submitting ? 'Processing...' : `Subscribe - ${SYMBOL}${displayPrice}/mo`}
                       <ArrowUpRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -278,69 +248,6 @@ const Pricing = () => {
           </div>
         </ScrollReveal>
       </div>
-
-      {checkoutPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8 relative">
-            <button onClick={closeCheckout} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-ping-light to-ping flex items-center justify-center mx-auto mb-3 shadow-lg">
-                <MessageCircle className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-display font-bold text-gray-900">
-                Subscribe to {plans.find(p => p.id === checkoutPlan)?.name}
-              </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                {SYMBOL}{DISPLAY_PRICES[checkoutPlan]?.[currency] || DISPLAY_PRICES[checkoutPlan]?.USD}/mo
-              </p>
-            </div>
-
-            <form onSubmit={handleRazorpay} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  <Phone className="w-3.5 h-3.5 inline mr-1" />
-                  WhatsApp Number
-                </label>
-                <input
-                  type="tel"
-                  value={checkoutPhone}
-                  onChange={e => setCheckoutPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  <Mail className="w-3.5 h-3.5 inline mr-1" />
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={checkoutEmail}
-                  onChange={e => setCheckoutEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={submitting || (!checkoutPhone && !checkoutEmail)}
-                className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              >
-                {submitting ? 'Processing...' : `Proceed to Pay ${SYMBOL}${DISPLAY_PRICES[checkoutPlan]?.[currency] || DISPLAY_PRICES[checkoutPlan]?.USD}`}
-              </button>
-
-              <p className="text-xs text-gray-400 text-center">
-                Your information is used only for payment processing.
-              </p>
-            </form>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
