@@ -121,12 +121,28 @@ const Pricing = () => {
         return;
       }
 
+      const custRes = await fetch(`${API_BASE}/razorpay/create-customer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: userData.userId,
+          contact: checkoutPhone,
+        }),
+      });
+      const custData = await custRes.json();
+      if (!custData.success) {
+        alert('Failed to create customer.');
+        setSubmitting(false);
+        return;
+      }
+
       const linkRes = await fetch(`${API_BASE}/razorpay/create-subscription-link`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           planId: checkoutPlan,
           userId: userData.userId,
+          customerId: custData.customerId,
           interval: 'monthly',
           country,
         }),
