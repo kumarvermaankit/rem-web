@@ -80,6 +80,8 @@ const renderStars = (count) => {
   ));
 };
 
+const API_BASE = process.env.REACT_APP_API_URL || '';
+
 const Pricing = () => {
   const [country, setCountry] = useState('IN');
   const [submitting, setSubmitting] = useState(false);
@@ -93,7 +95,7 @@ const Pricing = () => {
     setSubmitting(true);
 
     try {
-      const orderRes = await fetch('/razorpay/create-order', {
+      const orderRes = await fetch(`${API_BASE}/razorpay/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planId, country }),
@@ -116,7 +118,7 @@ const Pricing = () => {
         image: '/logo.png',
         order_id: orderData.orderId,
         handler: function (response) {
-          fetch('/razorpay/payment-callback', {
+          fetch(`${API_BASE}/razorpay/payment-callback`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
