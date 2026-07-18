@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Star, Sparkles, MessageCircle, ArrowUpRight } from 'lucide-react';
+import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, Phone } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
 const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
@@ -85,60 +85,60 @@ const API_BASE = 'https://reminder-backend-production-ping.up.railway.app';
 const Pricing = () => {
   const [country, setCountry] = useState('IN');
   const [submitting, setSubmitting] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState(null);
+  const [checkoutPhone, setCheckoutPhone] = useState('');
   const currency = getCurrency(country);
 
   useEffect(() => {
     setCountry(getCountry());
   }, []);
 
-  const handleRazorpay = async (planId) => {
+  const openCheckout = (planId) => {
+    setCheckoutPlan(planId);
+    setCheckoutPhone('');
+  };
+
+  const closeCheckout = () => {
+    setCheckoutPlan(null);
+    setSubmitting(false);
+  };
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!checkoutPhone) return;
     setSubmitting(true);
 
     try {
-      const orderRes = await fetch(`${API_BASE}/razorpay/create-order`, {
+      const userRes = await fetch(`${API_BASE}/razorpay/find-or-create-user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId, country }),
+        body: JSON.stringify({ phone: checkoutPhone }),
       });
-      const orderData = await orderRes.json();
-      if (!orderData.success) {
-        alert('Failed to create order. Please try again.');
+      const userData = await userRes.json();
+      if (!userData.success) {
+        alert('Could not identify user.');
         setSubmitting(false);
         return;
       }
 
-      const planName = plans.find(p => p.id === planId).name;
+      const linkRes = await fetch(`${API_BASE}/razorpay/create-subscription-link`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planId: checkoutPlan,
+          userId: userData.userId,
+          interval: 'monthly',
+          country,
+        }),
+      });
+      const linkData = await linkRes.json();
+      if (!linkData.success) {
+        alert('Failed to create subscription.');
+        setSubmitting(false);
+        return;
+      }
 
-      const options = {
-        key: orderData.keyId,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: 'Ping',
-        description: `${planName} Plan`,
-        image: '/logo.png',
-        order_id: orderData.orderId,
-        handler: function (response) {
-          fetch(`${API_BASE}/razorpay/payment-callback`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature,
-              planId,
-              amount: orderData.amount,
-              currency: orderData.currency,
-            }),
-          }).then(() => {
-            alert(`Payment successful! Welcome to Ping ${planName}`);
-          });
-        },
-        theme: { color: '#2F88FF' },
-        modal: { ondismiss: function () { setSubmitting(false); } },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+      window.location.href = linkData.shortUrl;
     } catch {
       alert('Something went wrong. Please try again.');
       setSubmitting(false);
@@ -224,15 +224,14 @@ const Pricing = () => {
                     </ul>
 
                     <button
-                      onClick={() => handleRazorpay(plan.id)}
-                      disabled={submitting}
-                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                      onClick={() => openCheckout(plan.id)}
+                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2 text-sm ${
                         plan.popular
                           ? 'bg-gradient-to-r from-ping to-ping-dark text-white hover:shadow-xl hover:shadow-ping/25 hover:-translate-y-0.5'
                           : 'bg-gray-50 text-gray-900 border border-gray-200 hover:border-ping/30 hover:bg-ping-lighter/50 hover:-translate-y-0.5'
                       }`}
                     >
-                      {submitting ? 'Processing...' : `Subscribe - ${SYMBOL}${displayPrice}/mo`}
+                      Subscribe - {SYMBOL}{displayPrice}/mo
                       <ArrowUpRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -250,6 +249,57 @@ const Pricing = () => {
           </div>
         </ScrollReveal>
       </div>
+
+      {checkoutPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8 relative">
+            <button onClick={closeCheckout} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-ping-light to-ping flex items-center justify-center mx-auto mb-3 shadow-lg">
+                <MessageCircle className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-display font-bold text-gray-900">
+                Subscribe to {plans.find(p => p.id === checkoutPlan)?.name}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                {SYMBOL}{DISPLAY_PRICES[checkoutPlan]?.[currency] || DISPLAY_PRICES[checkoutPlan]?.USD}/mo — monthly autopay
+              </p>
+            </div>
+
+            <form onSubmit={handleSubscribe} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <Phone className="w-3.5 h-3.5 inline mr-1" />
+                  WhatsApp Number
+                </label>
+                <input
+                  type="tel"
+                  value={checkoutPhone}
+                  onChange={e => setCheckoutPhone(e.target.value)}
+                  placeholder="+91 98765 43210"
+                  required
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {submitting ? 'Processing...' : `Start Autopay - ${SYMBOL}${DISPLAY_PRICES[checkoutPlan]?.[currency] || DISPLAY_PRICES[checkoutPlan]?.USD}/mo`}
+              </button>
+
+              <p className="text-xs text-gray-400 text-center">
+                You'll be redirected to Razorpay's secure checkout to authorize monthly payments.
+              </p>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
