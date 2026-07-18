@@ -80,7 +80,7 @@ const renderStars = (count) => {
   ));
 };
 
-const API_BASE = window.location.hostname === 'heyping.in' || window.location.hostname.endsWith('.heyping.in')
+const API_BASE = window.location.hostname.includes('heyping.in')
   ? 'https://reminder-backend-production-ping.up.railway.app'
   : '';
 
