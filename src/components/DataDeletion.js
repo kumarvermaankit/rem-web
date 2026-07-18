@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Trash2, Mail, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const DataDeletion = () => {
@@ -35,6 +36,14 @@ const DataDeletion = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <Helmet>
+        <title>Data Deletion - Ping | WhatsApp Assistant</title>
+        <meta name="description" content="Request complete deletion of your Ping account and data. Follow our simple process to remove all reminders, lists, and personal information from our servers." />
+        <meta property="og:title" content="Data Deletion - Ping | WhatsApp Assistant" />
+        <meta property="og:description" content="Request complete deletion of your Ping account and data. Follow our simple process to remove all reminders, lists, and personal information." />
+        <meta name="twitter:title" content="Data Deletion - Ping | WhatsApp Assistant" />
+        <meta name="twitter:description" content="Request complete deletion of your Ping account and data." />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link to="/" className="inline-flex items-center text-ping hover:text-ping-dark mb-6">

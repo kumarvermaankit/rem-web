@@ -1,0 +1,16 @@
+{
+  "name": "Ping - WhatsApp Assistant",
+  "short_name": "Ping",
+  "description": "Free WhatsApp assistant for reminders, to-do lists, notes, stock prices, and cricket scores.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2F88FF",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

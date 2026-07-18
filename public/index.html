@@ -32,6 +32,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script type="application/ld+json">
     {
@@ -49,6 +50,36 @@
       "author": {
         "@type": "Organization",
         "name": "Ping"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Ping",
+      "url": "https://heyping.in",
+      "logo": "https://heyping.in/logo.png",
+      "description": "Free WhatsApp assistant for reminders, to-do lists, notes, and live data.",
+      "contactPoint": [
+        { "@type": "ContactPoint", "contactType": "customer support", "email": "heypingchat@gmail.com" }
+      ],
+      "sameAs": []
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Ping",
+      "url": "https://heyping.in",
+      "description": "Free WhatsApp assistant for reminders, to-do lists, notes, stock prices, and cricket scores.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://heyping.in/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
       }
     }
     </script>

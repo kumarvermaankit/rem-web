@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { ChevronDown, MessageCircle, Clock, Shield, Zap, HelpCircle, Bell, Mail, ChevronRight } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 
@@ -42,8 +43,21 @@ const FAQ = () => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  };
+
   return (
     <section id="faq" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+      </Helmet>
       <div className="absolute inset-0 pointer-events-none bg-dots" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

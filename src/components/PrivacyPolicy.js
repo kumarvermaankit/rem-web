@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Shield, Eye, Lock, Database, UserCheck } from 'lucide-react';
 
 const PrivacyPolicy = () => {
@@ -57,6 +58,14 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <Helmet>
+        <title>Privacy Policy - Ping | WhatsApp Assistant</title>
+        <meta name="description" content="Read how Ping protects your privacy. Learn about data collection, encryption, retention policies, and your rights over personal information when using Ping WhatsApp assistant." />
+        <meta property="og:title" content="Privacy Policy - Ping | WhatsApp Assistant" />
+        <meta property="og:description" content="Read how Ping protects your privacy. Learn about data collection, encryption, retention policies, and your rights over personal information." />
+        <meta name="twitter:title" content="Privacy Policy - Ping | WhatsApp Assistant" />
+        <meta name="twitter:description" content="Read how Ping protects your privacy." />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link to="/" className="inline-flex items-center text-ping hover:text-ping-dark mb-6">

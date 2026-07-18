@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, FileText, AlertCircle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 
 const TermsOfService = () => {
@@ -58,6 +59,14 @@ const TermsOfService = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <Helmet>
+        <title>Terms of Service - Ping | WhatsApp Assistant</title>
+        <meta name="description" content="Review Ping's Terms of Service. Understand your rights and responsibilities when using Ping's WhatsApp reminder assistant, including subscription terms and service limitations." />
+        <meta property="og:title" content="Terms of Service - Ping | WhatsApp Assistant" />
+        <meta property="og:description" content="Review Ping's Terms of Service. Understand your rights and responsibilities when using Ping's WhatsApp reminder assistant." />
+        <meta name="twitter:title" content="Terms of Service - Ping | WhatsApp Assistant" />
+        <meta name="twitter:description" content="Review Ping's Terms of Service." />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link to="/" className="inline-flex items-center text-ping hover:text-ping-dark mb-6">
