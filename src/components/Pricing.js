@@ -109,7 +109,7 @@ const Pricing = () => {
     setSubmitting(true);
 
     try {
-      const userRes = await fetch('/api/razorpay/find-or-create-user', {
+      const userRes = await fetch('/razorpay/find-or-create-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: checkoutPhone, email: checkoutEmail }),
@@ -121,7 +121,7 @@ const Pricing = () => {
         return;
       }
 
-      const orderRes = await fetch('/api/razorpay/create-order', {
+      const orderRes = await fetch('/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planId: checkoutPlan, country }),
@@ -144,7 +144,7 @@ const Pricing = () => {
         image: '/logo.png',
         order_id: orderData.orderId,
         handler: function (response) {
-          fetch('/api/razorpay/payment-callback', {
+          fetch('/razorpay/payment-callback', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
