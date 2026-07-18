@@ -95,14 +95,14 @@ const Pricing = () => {
     setSubmitting(true);
 
     try {
-      const subRes = await fetch(`${API_BASE}/razorpay/create-subscription`, {
+      const orderRes = await fetch(`${API_BASE}/razorpay/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId, interval: 'monthly' }),
+        body: JSON.stringify({ planId, country }),
       });
-      const subData = await subRes.json();
-      if (!subData.success) {
-        alert('Failed to create subscription. Please try again.');
+      const orderData = await orderRes.json();
+      if (!orderData.success) {
+        alert('Failed to create order. Please try again.');
         setSubmitting(false);
         return;
       }
@@ -110,24 +110,27 @@ const Pricing = () => {
       const planName = plans.find(p => p.id === planId).name;
 
       const options = {
-        key: subData.keyId,
-        subscription_id: subData.subscriptionId,
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
         name: 'Ping',
-        description: `${planName} Plan (monthly)`,
+        description: `${planName} Plan`,
         image: '/logo.png',
+        order_id: orderData.orderId,
         handler: function (response) {
-          fetch(`${API_BASE}/razorpay/subscription-callback`, {
+          fetch(`${API_BASE}/razorpay/payment-callback`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               razorpayPaymentId: response.razorpay_payment_id,
-              razorpaySubscriptionId: response.razorpay_subscription_id,
+              razorpayOrderId: response.razorpay_order_id,
               razorpaySignature: response.razorpay_signature,
               planId,
-              interval: 'monthly',
+              amount: orderData.amount,
+              currency: orderData.currency,
             }),
           }).then(() => {
-            alert(`Subscription active! Welcome to Ping ${planName}`);
+            alert(`Payment successful! Welcome to Ping ${planName}`);
           });
         },
         theme: { color: '#2F88FF' },
