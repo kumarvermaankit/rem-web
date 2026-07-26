@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -13,7 +13,15 @@ import TermsOfService from './components/TermsOfService';
 import DataDeletion from './components/DataDeletion';
 import NotFound from './components/NotFound';
 
-function HomePage() {
+function HomePage({ scrollToPricing = false }) {
+  useEffect(() => {
+    if (!scrollToPricing) return;
+    const t = setTimeout(() => {
+      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    return () => clearTimeout(t);
+  }, [scrollToPricing]);
+
   return (
     <>
       <Helmet>
@@ -29,13 +37,26 @@ function HomePage() {
   );
 }
 
+function HashScroll() {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (hash === '#pricing') {
+      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [hash]);
+  return null;
+}
+
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-white font-body">
         <Navbar />
+        <HashScroll />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/subscribe" element={<HomePage scrollToPricing />} />
+          <Route path="/pricing" element={<HomePage scrollToPricing />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/data-deletion" element={<DataDeletion />} />
