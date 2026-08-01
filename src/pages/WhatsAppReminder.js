@@ -125,8 +125,8 @@ function WhatsAppReminder() {
       <RelatedArticles
         articles={[
           { to: '/whatsapp-assistant', title: 'What is a WhatsApp Assistant?', description: 'How an AI assistant inside WhatsApp handles reminders, lists, notes, and more.' },
-          { to: '/reminder-bot', title: 'Reminder Bots Explained', description: 'How reminder bots work and why they beat traditional reminder apps.' },
-          { to: '/personal-assistant', title: 'Your Personal Assistant in WhatsApp', description: 'Ping as your pocket personal assistant for tasks, notes, and live info.' }
+          { to: '/how-to-set-reminders-on-whatsapp', title: 'How to Set Reminders in WhatsApp', description: 'A step-by-step guide with real examples you can use right now.' },
+          { to: '/reminder-bot', title: 'Reminder Bots Explained', description: 'How reminder bots work and why they beat traditional reminder apps.' }
         ]}
       />
 

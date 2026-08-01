@@ -133,7 +133,7 @@ function WhatsAppAssistant() {
       <RelatedArticles
         articles={[
           { to: '/whatsapp-reminder', title: 'Set Reminders in WhatsApp', description: 'A complete guide to setting one-time and recurring WhatsApp reminders.' },
-          { to: '/reminder-bot', title: 'Reminder Bots Explained', description: 'How reminder bots work and why they beat traditional reminder apps.' },
+          { to: '/whatsapp-notes', title: 'WhatsApp Notes', description: 'Save thoughts and details instantly, right inside your chat.' },
           { to: '/personal-assistant', title: 'Your Personal Assistant in WhatsApp', description: 'Ping as your pocket personal assistant for tasks, notes, and live info.' }
         ]}
       />

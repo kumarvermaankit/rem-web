@@ -14,6 +14,9 @@ const Footer = () => {
     { name: 'WhatsApp Assistant', href: '/whatsapp-assistant' },
     { name: 'Reminder Bot', href: '/reminder-bot' },
     { name: 'Personal Assistant', href: '/personal-assistant' },
+    { name: 'Set Reminders in WhatsApp', href: '/how-to-set-reminders-on-whatsapp' },
+    { name: 'WhatsApp To-Do List', href: '/whatsapp-to-do-list' },
+    { name: 'WhatsApp Notes', href: '/whatsapp-notes' },
   ];
 
   const scrollToTop = () => {

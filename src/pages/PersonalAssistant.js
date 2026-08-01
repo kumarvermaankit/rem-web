@@ -133,9 +133,9 @@ function PersonalAssistant() {
 
       <RelatedArticles
         articles={[
-          { to: '/whatsapp-reminder', title: 'Set Reminders in WhatsApp', description: 'A complete guide to setting one-time and recurring WhatsApp reminders.' },
-          { to: '/whatsapp-assistant', title: 'What is a WhatsApp Assistant?', description: 'How an AI assistant inside WhatsApp handles reminders, lists, notes, and more.' },
-          { to: '/reminder-bot', title: 'Reminder Bots Explained', description: 'How reminder bots work and why they beat traditional reminder apps.' }
+          { to: '/whatsapp-to-do-list', title: 'WhatsApp To-Do List', description: 'Keep your task list inside WhatsApp and never lose track again.' },
+          { to: '/whatsapp-notes', title: 'WhatsApp Notes', description: 'Save thoughts and details instantly, right inside your chat.' },
+          { to: '/whatsapp-assistant', title: 'What is a WhatsApp Assistant?', description: 'How an AI assistant inside WhatsApp handles reminders, lists, notes, and more.' }
         ]}
       />
 

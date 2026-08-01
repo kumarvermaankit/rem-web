@@ -16,6 +16,10 @@ import WhatsAppReminder from './pages/WhatsAppReminder';
 import WhatsAppAssistant from './pages/WhatsAppAssistant';
 import ReminderBot from './pages/ReminderBot';
 import PersonalAssistant from './pages/PersonalAssistant';
+import HowToSetReminders from './pages/HowToSetReminders';
+import WhatsAppTodoList from './pages/WhatsAppTodoList';
+import WhatsAppReminderApp from './pages/WhatsAppReminderApp';
+import WhatsAppNotes from './pages/WhatsAppNotes';
 
 function HomePage({ scrollToPricing = false }) {
   useEffect(() => {
@@ -68,6 +72,10 @@ function App() {
           <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
           <Route path="/reminder-bot" element={<ReminderBot />} />
           <Route path="/personal-assistant" element={<PersonalAssistant />} />
+          <Route path="/how-to-set-reminders-on-whatsapp" element={<HowToSetReminders />} />
+          <Route path="/whatsapp-to-do-list" element={<WhatsAppTodoList />} />
+          <Route path="/whatsapp-reminder-app" element={<WhatsAppReminderApp />} />
+          <Route path="/whatsapp-notes" element={<WhatsAppNotes />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
