@@ -1,19 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { MessageCircle, Mail, ArrowUp } from 'lucide-react';
 
 const Footer = () => {
-  const footerLinks = [
-    { name: 'Home', href: '#hero' },
-    { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'FAQ', href: '#faq' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   const legalLinks = [
     { name: 'Privacy Policy', href: '/privacy-policy' },
     { name: 'Terms of Service', href: '/terms-of-service' },
     { name: 'Data Deletion', href: '/data-deletion' },
+  ];
+
+  const guideLinks = [
+    { name: 'WhatsApp Reminder', href: '/whatsapp-reminder' },
+    { name: 'WhatsApp Assistant', href: '/whatsapp-assistant' },
+    { name: 'Reminder Bot', href: '/reminder-bot' },
+    { name: 'Personal Assistant', href: '/personal-assistant' },
   ];
 
   const scrollToTop = () => {
@@ -56,16 +56,16 @@ const Footer = () => {
           </div>
 
           <div className="md:col-span-2 md:col-start-7">
-            <h4 className="font-semibold text-white text-sm mb-4 tracking-wider uppercase">Links</h4>
+            <h4 className="font-semibold text-white text-sm mb-4 tracking-wider uppercase">Guides</h4>
             <ul className="space-y-3">
-              {footerLinks.map((link) => (
+              {guideLinks.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-gray-400 hover:text-white text-sm transition-colors duration-300"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

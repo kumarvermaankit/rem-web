@@ -11,15 +11,15 @@ const DISPLAY_PRICES = {
 };
 
 const COUNTRY_OPTIONS = [
-  { code: 'IN', label: 'India' },
-  { code: 'US', label: 'United States' },
-  { code: 'GB', label: 'United Kingdom' },
-  { code: 'AU', label: 'Australia' },
-  { code: 'CA', label: 'Canada' },
-  { code: 'DE', label: 'Germany' },
-  { code: 'FR', label: 'France' },
-  { code: 'SG', label: 'Singapore' },
-  { code: 'AE', label: 'UAE' },
+  { code: 'IN', label: 'India', dial: '91', placeholder: '98765 43210' },
+  { code: 'US', label: 'United States', dial: '1', placeholder: '202 555 0123' },
+  { code: 'GB', label: 'United Kingdom', dial: '44', placeholder: '7400 123456' },
+  { code: 'AU', label: 'Australia', dial: '61', placeholder: '412 345 678' },
+  { code: 'CA', label: 'Canada', dial: '1', placeholder: '416 555 0123' },
+  { code: 'DE', label: 'Germany', dial: '49', placeholder: '1512 3456789' },
+  { code: 'FR', label: 'France', dial: '33', placeholder: '6 12 34 56 78' },
+  { code: 'SG', label: 'Singapore', dial: '65', placeholder: '8123 4567' },
+  { code: 'AE', label: 'UAE', dial: '971', placeholder: '50 123 4567' },
 ];
 
 const plans = [
@@ -72,7 +72,7 @@ const plans = [
 
 const WHATSAPP_URL = 'https://wa.me/918076569811?text=Hi%20Ping';
 const TRIAL_DAYS = 5;
-const API_BASE = process.env.REACT_APP_API_BASE;
+const API_BASE = process.env.REACT_APP_API_BASE || 'https://reminder-backend-production-ping.up.railway.app';
 
 const getCountry = () => {
   try {
@@ -88,6 +88,50 @@ const getCurrency = (country) => {
   return map[country] || 'USD';
 };
 
+const getDial = (country) => COUNTRY_OPTIONS.find((c) => c.code === country)?.dial || '91';
+
+/** Normalize to WhatsApp-style digits only, e.g. 918076569811 */
+const normalizePhone = (raw, country = 'IN') => {
+  let digits = String(raw || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('00')) digits = digits.slice(2);
+
+  const dial = getDial(country);
+
+  if (country === 'IN' && /^[6-9]\d{9}$/.test(digits)) return `${dial}${digits}`;
+  if (digits.startsWith(dial) && digits.length >= dial.length + 8) return digits;
+  if ((country === 'US' || country === 'CA') && digits.length === 10) return `${dial}${digits}`;
+  if (digits.length <= 11 && !digits.startsWith(dial)) return `${dial}${digits}`;
+  return digits;
+};
+
+const isValidPhone = (normalized, country = 'IN') => {
+  if (!normalized || normalized.length < 10) return false;
+  if (country === 'IN') return /^91[6-9]\d{9}$/.test(normalized);
+  return normalized.length >= 10 && normalized.length <= 15;
+};
+
+const apiPost = async (path, body) => {
+  if (!API_BASE) {
+    throw new Error('API is not configured. Set REACT_APP_API_BASE.');
+  }
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  let data = null;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Server error (${res.status}). Please try again.`);
+  }
+  if (!res.ok && !data?.error) {
+    throw new Error(data?.message || `Request failed (${res.status})`);
+  }
+  return data;
+};
+
 const renderStars = (count) => {
   return Array.from({ length: 3 }, (_, i) => (
     <Star key={i} className={`w-4 h-4 ${i < count ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}`} />
@@ -99,15 +143,15 @@ const Pricing = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  // checkout wizard
   const [step, setStep] = useState(null); // null | 'form' | 'options' | 'done'
   const [checkoutPlan, setCheckoutPlan] = useState(null);
   const [form, setForm] = useState({ name: '', phone: '', country: 'IN' });
   const [userStatus, setUserStatus] = useState(null);
-  const [doneMeta, setDoneMeta] = useState(null); // { mode, shortUrl?, trialEndsAt? }
+  const [doneMeta, setDoneMeta] = useState(null);
 
   const currency = getCurrency(country);
   const SYMBOL = SYMBOL_MAP[currency] || currency;
+  const countryOpt = COUNTRY_OPTIONS.find((c) => c.code === (form.country || country)) || COUNTRY_OPTIONS[0];
   const showCountryName = COUNTRY_OPTIONS.find((c) => c.code === country)?.label || country;
   const planName = plans.find((p) => p.id === checkoutPlan)?.name;
   const displayPrice = checkoutPlan
@@ -145,73 +189,74 @@ const Pricing = () => {
 
   const handleIdentify = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.phone.trim() || !form.country) return;
-    setSubmitting(true);
     setError('');
 
+    const name = form.name.trim();
+    const phone = normalizePhone(form.phone, form.country);
+    if (!name) {
+      setError('Please enter your name.');
+      return;
+    }
+    if (!isValidPhone(phone, form.country)) {
+      setError(`Enter a valid WhatsApp number for ${countryOpt.label} (e.g. ${countryOpt.placeholder}).`);
+      return;
+    }
+
+    setSubmitting(true);
     try {
-      const res = await fetch(`${API_BASE}/razorpay/find-or-create-user`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          phone: form.phone.trim(),
-          country: form.country,
-          location: form.country,
-        }),
+      const data = await apiPost('/razorpay/find-or-create-user', {
+        name,
+        phone,
+        country: form.country,
+        location: form.country,
       });
-      const data = await res.json();
       if (!data.success) {
         setError(data.error || 'Could not identify user.');
-        setSubmitting(false);
         return;
       }
+      setForm((f) => ({ ...f, phone })); // keep normalized
       setUserStatus(data);
       setStep('options');
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const ensureCustomer = async () => {
-    const custRes = await fetch(`${API_BASE}/razorpay/create-customer`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+  const createAutopayLink = async (withTrial) => {
+    const phone = normalizePhone(form.phone, form.country);
+    let customerId;
+
+    try {
+      const custData = await apiPost('/razorpay/create-customer', {
         userId: userStatus.userId,
         name: form.name.trim(),
-        contact: form.phone.trim(),
-      }),
-    });
-    const custData = await custRes.json();
-    if (!custData.success) {
-      throw new Error(custData.error || 'Failed to create customer');
+        contact: phone,
+        country: form.country,
+      });
+      if (custData.success) {
+        customerId = custData.customerId;
+      } else {
+        console.warn('create-customer skipped:', custData.error);
+      }
+    } catch (err) {
+      console.warn('create-customer failed, continuing:', err.message);
     }
-    return custData.customerId;
-  };
 
-  const createAutopayLink = async (withTrial) => {
-    const customerId = await ensureCustomer();
     const payload = {
       planId: checkoutPlan,
       userId: userStatus.userId,
-      customerId,
       interval: 'monthly',
       country: form.country,
-      contact: form.phone.trim(),
+      contact: phone,
     };
+    if (customerId) payload.customerId = customerId;
     if (withTrial) payload.trialDays = TRIAL_DAYS;
 
-    const linkRes = await fetch(`${API_BASE}/razorpay/create-subscription-link`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const linkData = await linkRes.json();
-    if (!linkData.success) {
-      throw new Error(linkData.error || 'Failed to create subscription');
+    const linkData = await apiPost('/razorpay/create-subscription-link', payload);
+    if (!linkData.success || !linkData.shortUrl) {
+      throw new Error(linkData.error || 'Failed to create autopay link');
     }
     return linkData;
   };
@@ -220,19 +265,13 @@ const Pricing = () => {
     setSubmitting(true);
     setError('');
     try {
-      const res = await fetch(`${API_BASE}/razorpay/start-trial`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: userStatus.userId,
-          planId: checkoutPlan,
-          trialDays: TRIAL_DAYS,
-        }),
+      const data = await apiPost('/razorpay/start-trial', {
+        userId: userStatus.userId,
+        planId: checkoutPlan,
+        trialDays: TRIAL_DAYS,
       });
-      const data = await res.json();
       if (!data.success) {
         setError(data.error || 'Could not start trial.');
-        setSubmitting(false);
         return;
       }
       setDoneMeta({
@@ -241,46 +280,22 @@ const Pricing = () => {
         whatsappUrl: data.whatsappUrl || WHATSAPP_URL,
       });
       setStep('done');
-    } catch {
-      setError('Something went wrong. Please try again.');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleStartTrialWithAutopay = async () => {
+  const handleAutopay = async (withTrial) => {
     setSubmitting(true);
     setError('');
     try {
-      const linkData = await createAutopayLink(true);
-      setDoneMeta({
-        mode: 'trial_autopay',
-        shortUrl: linkData.shortUrl,
-        trialEndsAt: null,
-        whatsappUrl: linkData.whatsappUrl || WHATSAPP_URL,
-      });
-      setStep('done');
+      const linkData = await createAutopayLink(withTrial);
+      // Go straight to Razorpay so mandate can be completed
+      window.location.href = linkData.shortUrl;
     } catch (err) {
-      setError(err.message || 'Failed to set up trial + autopay.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleAutopayOnly = async () => {
-    setSubmitting(true);
-    setError('');
-    try {
-      const linkData = await createAutopayLink(false);
-      setDoneMeta({
-        mode: 'autopay',
-        shortUrl: linkData.shortUrl,
-        whatsappUrl: linkData.whatsappUrl || WHATSAPP_URL,
-      });
-      setStep('done');
-    } catch (err) {
-      setError(err.message || 'Failed to set up autopay.');
-    } finally {
+      setError(err.message || (withTrial ? 'Failed to set up trial + autopay.' : 'Failed to set up autopay.'));
       setSubmitting(false);
     }
   };
@@ -409,7 +424,7 @@ const Pricing = () => {
       {step && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 md:p-8 relative max-h-[90vh] overflow-y-auto">
-            <button onClick={closeCheckout} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <button onClick={closeCheckout} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600" disabled={submitting}>
               <X className="w-5 h-5" />
             </button>
 
@@ -418,7 +433,7 @@ const Pricing = () => {
                 <MessageCircle className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-xl font-display font-bold text-gray-900">
-                {step === 'done' ? 'You\'re all set' : `${planName} plan`}
+                {step === 'done' ? "You're all set" : `${planName} plan`}
               </h3>
               <p className="text-sm text-gray-500 mt-1">
                 {SYMBOL}{displayPrice}/mo
@@ -446,21 +461,7 @@ const Pricing = () => {
                     onChange={(e) => updateForm('name', e.target.value)}
                     placeholder="Your name"
                     required
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <Phone className="w-3.5 h-3.5 inline mr-1" />
-                    WhatsApp number
-                  </label>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) => updateForm('phone', e.target.value)}
-                    placeholder="+91 98765 43210"
-                    required
+                    autoComplete="name"
                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
                   />
                 </div>
@@ -480,6 +481,30 @@ const Pricing = () => {
                       <option key={c.code} value={c.code}>{c.label}</option>
                     ))}
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Phone className="w-3.5 h-3.5 inline mr-1" />
+                    WhatsApp number
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-600 whitespace-nowrap">
+                      +{countryOpt.dial}
+                    </div>
+                    <input
+                      type="tel"
+                      value={form.phone}
+                      onChange={(e) => updateForm('phone', e.target.value)}
+                      placeholder={countryOpt.placeholder}
+                      required
+                      autoComplete="tel"
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Use the same number you message Ping with.
+                  </p>
                 </div>
 
                 <button
@@ -512,11 +537,11 @@ const Pricing = () => {
                     <button
                       type="button"
                       disabled={submitting}
-                      onClick={handleStartTrialWithAutopay}
+                      onClick={() => handleAutopay(true)}
                       className="w-full bg-white text-gray-900 border border-gray-200 py-3 rounded-xl font-semibold hover:border-ping/30 hover:bg-ping-lighter/40 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
                     >
                       <ShieldCheck className="w-4 h-4 text-ping" />
-                      Trial + set up autopay
+                      {submitting ? 'Opening Razorpay...' : 'Trial + set up autopay'}
                     </button>
                     <p className="text-xs text-gray-400 text-center">
                       Autopay starts after the {TRIAL_DAYS}-day trial. Cancel anytime.
@@ -529,11 +554,11 @@ const Pricing = () => {
                     <button
                       type="button"
                       disabled={submitting}
-                      onClick={handleAutopayOnly}
+                      onClick={() => handleAutopay(false)}
                       className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
                     >
                       <CreditCard className="w-4 h-4" />
-                      {submitting ? 'Creating link...' : `Set up autopay — ${SYMBOL}${displayPrice}/mo`}
+                      {submitting ? 'Opening Razorpay...' : `Set up autopay — ${SYMBOL}${displayPrice}/mo`}
                     </button>
                     <p className="text-xs text-gray-400 text-center">
                       You'll authorize a secure Razorpay mandate for monthly billing.
@@ -541,14 +566,14 @@ const Pricing = () => {
                   </>
                 )}
 
-                {(userStatus.hasActiveAccess || userStatus.isOnTrial) && (
+                {(userStatus.hasActiveAccess || userStatus.isOnTrial || (userStatus.hasActiveAccess && userStatus.hasAutopay)) && (
                   <a
-                    href={WHATSAPP_URL}
+                    href={userStatus.whatsappUrl || WHATSAPP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full bg-gray-50 text-gray-900 border border-gray-200 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-all inline-flex items-center justify-center gap-2"
+                    className="w-full bg-emerald-500 text-white py-3 rounded-xl font-semibold hover:bg-emerald-600 transition-all inline-flex items-center justify-center gap-2"
                   >
-                    <MessageCircle className="w-4 h-4 text-ping" />
+                    <MessageCircle className="w-4 h-4" />
                     Talk to Ping on WhatsApp
                   </a>
                 )}
@@ -557,30 +582,9 @@ const Pricing = () => {
 
             {step === 'done' && doneMeta && (
               <div className="space-y-4 text-center">
-                {doneMeta.mode === 'trial' && (
-                  <p className="text-sm text-gray-600">
-                    Your {TRIAL_DAYS}-day free trial is live. Message Ping on WhatsApp to get started.
-                  </p>
-                )}
-                {(doneMeta.mode === 'trial_autopay' || doneMeta.mode === 'autopay') && (
-                  <p className="text-sm text-gray-600">
-                    {doneMeta.mode === 'trial_autopay'
-                      ? `Trial started. Complete autopay authorization so billing begins after ${TRIAL_DAYS} days.`
-                      : 'Complete autopay authorization on Razorpay, then chat with Ping.'}
-                  </p>
-                )}
-
-                {doneMeta.shortUrl && (
-                  <a
-                    href={doneMeta.shortUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 transition-all inline-flex items-center justify-center gap-2"
-                  >
-                    <CreditCard className="w-4 h-4" />
-                    Complete autopay on Razorpay
-                  </a>
-                )}
+                <p className="text-sm text-gray-600">
+                  Your {TRIAL_DAYS}-day free trial is live. Message Ping on WhatsApp to get started.
+                </p>
 
                 <a
                   href={doneMeta.whatsappUrl || WHATSAPP_URL}

@@ -12,6 +12,10 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import DataDeletion from './components/DataDeletion';
 import NotFound from './components/NotFound';
+import WhatsAppReminder from './pages/WhatsAppReminder';
+import WhatsAppAssistant from './pages/WhatsAppAssistant';
+import ReminderBot from './pages/ReminderBot';
+import PersonalAssistant from './pages/PersonalAssistant';
 
 function HomePage({ scrollToPricing = false }) {
   useEffect(() => {
@@ -60,6 +64,10 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/data-deletion" element={<DataDeletion />} />
+          <Route path="/whatsapp-reminder" element={<WhatsAppReminder />} />
+          <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
+          <Route path="/reminder-bot" element={<ReminderBot />} />
+          <Route path="/personal-assistant" element={<PersonalAssistant />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
