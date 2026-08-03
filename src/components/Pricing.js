@@ -71,7 +71,7 @@ const plans = [
 ];
 
 const WHATSAPP_URL = 'https://wa.me/918076569811?text=Hi%20Ping';
-const TRIAL_DAYS = 5;
+const TRIAL_DAYS = 6;
 const API_BASE = process.env.REACT_APP_API_BASE || 'https://reminder-backend-production-ping.up.railway.app';
 
 const getCountry = () => {
