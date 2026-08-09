@@ -51,7 +51,7 @@ const Hero = () => {
             <ScrollReveal>
               <div className="inline-flex items-center gap-2 glass-card rounded-full px-5 py-2 mb-8">
                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-white/80 text-sm font-medium">Free · No sign-up needed</span>
+                <span className="text-white/80 text-sm font-medium">Your intelligent WhatsApp assistant</span>
               </div>
             </ScrollReveal>
 
