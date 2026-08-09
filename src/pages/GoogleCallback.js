@@ -19,8 +19,10 @@ const GoogleCallback = () => {
     }
     setToken(token);
     fetchMe().then((u) => {
-      if (u) navigate('/dashboard', { replace: true });
-      else {
+      if (u) {
+        navigate('/dashboard', { replace: true });
+        if (!u.phone || !u.name) openAuth('profile', null, true);
+      } else {
         setError('Google login failed. Please try again.');
         openAuth('login');
       }

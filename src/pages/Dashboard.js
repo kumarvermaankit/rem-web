@@ -22,7 +22,7 @@ const formatDate = (iso) => {
 };
 
 const Dashboard = () => {
-  const { user, logout, fetchMe } = useAuth();
+  const { user, logout, fetchMe, openAuth } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('reminders');
 
@@ -206,6 +206,18 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+
+        {user && (!user.phone || !user.name) && (
+          <div className="mb-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-4 py-3 text-sm flex flex-wrap items-center justify-between gap-3">
+            <span>Add your WhatsApp number to complete your profile — it's required to use Ping.</span>
+            <button
+              onClick={() => openAuth('profile', null, true)}
+              className="px-4 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700"
+            >
+              Complete profile
+            </button>
+          </div>
+        )}
 
         {error && (
           <div className="mb-4 flex items-start gap-2 bg-red-50 text-red-700 rounded-lg px-4 py-3 text-sm">
@@ -457,23 +469,33 @@ const Dashboard = () => {
                 <p className="text-xs text-violet-600 mt-1">Free trial ends {formatDate(subscription.trialEndsAt)}</p>
               )}
 
-              {subscription?.hasAutopay && (
-                <button
-                  onClick={cancelSub}
-                  disabled={cancelling}
-                  className="mt-5 px-4 py-2 border border-red-200 text-red-600 text-sm font-semibold rounded-lg hover:bg-red-50 disabled:opacity-60"
-                >
-                  {cancelling ? 'Cancelling…' : 'Cancel subscription'}
-                </button>
-              )}
-              {!subscription?.hasAutopay && (
-                <a
-                  href="/subscribe"
-                  className="mt-5 inline-block px-4 py-2 bg-ping text-white text-sm font-semibold rounded-lg hover:bg-ping-dark"
-                >
-                  {subscription?.isPremium || user?.hasActiveAccess ? 'Manage plan' : 'Start subscription'}
-                </a>
-              )}
+              <div className="flex flex-wrap items-center gap-3 mt-5">
+                {subscription?.hasAutopay && (
+                  <>
+                    <a
+                      href="/subscribe"
+                      className="px-4 py-2 bg-ping text-white text-sm font-semibold rounded-lg hover:bg-ping-dark"
+                    >
+                      Change subscription
+                    </a>
+                    <button
+                      onClick={cancelSub}
+                      disabled={cancelling}
+                      className="px-4 py-2 border border-red-200 text-red-600 text-sm font-semibold rounded-lg hover:bg-red-50 disabled:opacity-60"
+                    >
+                      {cancelling ? 'Cancelling…' : 'Cancel subscription'}
+                    </button>
+                  </>
+                )}
+                {!subscription?.hasAutopay && (
+                  <a
+                    href="/subscribe"
+                    className="px-4 py-2 bg-ping text-white text-sm font-semibold rounded-lg hover:bg-ping-dark"
+                  >
+                    {subscription?.isPremium || user?.hasActiveAccess ? 'Change plan' : 'Start subscription'}
+                  </a>
+                )}
+              </div>
             </div>
 
             {payments.length > 0 && (

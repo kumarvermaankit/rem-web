@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, ShieldCheck, CreditCard, Gift } from 'lucide-react';
+import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, ShieldCheck, CreditCard, Gift, RefreshCw, XCircle } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { useAuth } from '../context/AuthContext';
 import { apiGet, apiPost } from '../api';
@@ -112,6 +112,10 @@ const Pricing = () => {
       openAuth('login', () => openCheckout(planId));
       return;
     }
+    if (!user.phone) {
+      openAuth('profile', () => openCheckout(planId), true);
+      return;
+    }
     setCheckoutPlan(planId);
     setStep('options');
     setError('');
@@ -207,6 +211,43 @@ const Pricing = () => {
       window.location.href = linkData.shortUrl;
     } catch (err) {
       setError(err.message || (withTrial ? 'Failed to set up trial + autopay.' : 'Failed to set up autopay.'));
+      setSubmitting(false);
+    }
+  };
+
+  const handleChangeSubscription = async () => {
+    setSubmitting(true);
+    setError('');
+    try {
+      const cancelData = await apiPost('/razorpay/cancel-subscription', {});
+      if (cancelData.success === false) {
+        throw new Error(cancelData.error || 'Failed to remove the current autopay.');
+      }
+      const linkData = await createAutopayLink(false);
+      // Old autopay removed, redirect to Razorpay to set up the new plan
+      window.location.href = linkData.shortUrl;
+    } catch (err) {
+      setError(err.message || 'Failed to change subscription.');
+      setSubmitting(false);
+    }
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!window.confirm('Cancel your subscription? Autopay will be removed and you will lose premium access.')) return;
+    setSubmitting(true);
+    setError('');
+    try {
+      const data = await apiPost('/razorpay/cancel-subscription', {});
+      if (!data.success) {
+        setError(data.error || 'Failed to cancel subscription.');
+        setSubmitting(false);
+        return;
+      }
+      const status = await apiGet('/razorpay/user-status');
+      if (status.success) setUserStatus(status);
+    } catch (err) {
+      setError(err.message || 'Failed to cancel subscription.');
+    } finally {
       setSubmitting(false);
     }
   };
@@ -413,12 +454,35 @@ const Pricing = () => {
                 )}
 
                 {userStatus.hasActiveAccess && userStatus.hasAutopay && (
-                  <a
-                    href="/dashboard"
-                    className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 transition-all inline-flex items-center justify-center gap-2"
-                  >
-                    Manage subscription in dashboard
-                  </a>
+                  <>
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={handleChangeSubscription}
+                      className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      {submitting ? 'Opening Razorpay...' : 'Change subscription'}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={handleCancelSubscription}
+                      className="w-full bg-white text-red-600 border border-red-200 py-3 rounded-xl font-semibold hover:bg-red-50 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" />
+                      {submitting ? 'Cancelling...' : 'Cancel subscription'}
+                    </button>
+                    <p className="text-xs text-gray-400 text-center">
+                      Changing a plan removes your current autopay and sets up the new one.
+                    </p>
+                    <a
+                      href="/dashboard"
+                      className="block text-center text-xs text-gray-400 hover:text-ping transition-colors"
+                    >
+                      Go to dashboard
+                    </a>
+                  </>
                 )}
 
                 {!userStatus.hasActiveAccess && (

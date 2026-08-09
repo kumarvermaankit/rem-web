@@ -21,6 +21,7 @@ const getDetectedCountry = () => {
 const AuthModal = () => {
   const { authModal, closeAuth, login, register } = useAuth();
   const [step, setStep] = useState('login');
+  const [forced, setForced] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -28,14 +29,17 @@ const AuthModal = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [phoneConflict, setPhoneConflict] = useState(false);
 
   useEffect(() => {
     if (authModal) {
       setStep(authModal.mode || 'login');
+      setForced(!!authModal.force);
       setCountry(getDetectedCountry());
       setError('');
       setPassword('');
       setLoading(false);
+      setPhoneConflict(false);
     }
   }, [authModal]);
 
@@ -60,6 +64,7 @@ const AuthModal = () => {
     if (!u?.phone || !u?.name) {
       setName(u?.name || '');
       setPhone(u?.phone || '');
+      setForced(true);
       setStep('profile');
       return;
     }
@@ -68,8 +73,7 @@ const AuthModal = () => {
     if (onSuccess) onSuccess();
   };
 
-  const handleProfile = async (e) => {
-    e.preventDefault();
+  const submitProfile = async (force) => {
     setError('');
     const digits = phone.replace(/[^0-9]/g, '');
     if (!name.trim()) {
@@ -81,15 +85,24 @@ const AuthModal = () => {
       return;
     }
     setLoading(true);
-    const data = await apiPost('/auth/profile', { name: name.trim(), phone: digits, country });
+    const data = await apiPost('/auth/profile', { name: name.trim(), phone: digits, country, force });
     setLoading(false);
     if (!data.success) {
+      if (data.phoneConflict) {
+        setPhoneConflict(true);
+        return;
+      }
       setError(data.error || 'Failed to save your details.');
       return;
     }
     const onSuccess = authModal.onSuccess;
     closeAuth();
     if (onSuccess) onSuccess();
+  };
+
+  const handleProfile = (e) => {
+    e.preventDefault();
+    submitProfile(false);
   };
 
   const switchStep = (s) => {
@@ -114,17 +127,19 @@ const AuthModal = () => {
     >
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={closeAuth}
+        onClick={forced ? undefined : closeAuth}
         aria-hidden="true"
       />
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto py-8 px-8">
-        <button
-          onClick={closeAuth}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
-          aria-label="Close"
-        >
-          <X className="h-5 w-5" />
-        </button>
+        {!forced && (
+          <button
+            onClick={closeAuth}
+            className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
 
         <div className="text-center mb-6">
           <h2 className="font-display text-2xl font-bold text-gray-900">{title}</h2>
@@ -135,6 +150,30 @@ const AuthModal = () => {
           <div className="mb-5 flex items-start gap-2 bg-red-50 text-red-700 rounded-lg px-4 py-3 text-sm">
             <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
             <span>{error}</span>
+          </div>
+        )}
+
+        {phoneConflict && (
+          <div className="mb-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+            <p className="text-sm text-amber-800">
+              This WhatsApp number already exists in our system.
+              Would you like to attach it to this email?
+            </p>
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => { setPhoneConflict(false); submitProfile(true); }}
+                disabled={loading}
+                className="px-3 py-1.5 bg-amber-600 text-white text-sm font-semibold rounded-lg hover:bg-amber-700 disabled:opacity-60"
+              >
+                {loading ? 'Attaching…' : 'Yes, attach this number'}
+              </button>
+              <button
+                onClick={() => { setPhoneConflict(false); setPhone(''); }}
+                className="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded-lg"
+              >
+                Use a different number
+              </button>
+            </div>
           </div>
         )}
 

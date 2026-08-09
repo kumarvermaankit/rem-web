@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const openAuth = (mode = 'login', onSuccess = null) => setAuthModal({ mode, onSuccess });
+  const openAuth = (mode = 'login', onSuccess = null, force = false) => setAuthModal({ mode, onSuccess, force });
   const closeAuth = () => setAuthModal(null);
 
   return (
