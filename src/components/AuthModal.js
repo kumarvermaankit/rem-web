@@ -131,15 +131,13 @@ const AuthModal = () => {
         aria-hidden="true"
       />
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto py-8 px-8">
-        {!forced && (
-          <button
-            onClick={closeAuth}
-            className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        )}
+        <button
+          onClick={closeAuth}
+          className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+          aria-label="Close"
+        >
+          <X className="h-5 w-5" />
+        </button>
 
         <div className="text-center mb-6">
           <h2 className="font-display text-2xl font-bold text-gray-900">{title}</h2>

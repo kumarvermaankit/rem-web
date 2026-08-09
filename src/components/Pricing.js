@@ -254,14 +254,16 @@ const Pricing = () => {
 
   const statusBanner = () => {
     if (!userStatus) return null;
+    if (userStatus.hasAutopay) {
+      return userStatus.hasActiveAccess
+        ? 'Your plan is active and autopay is on.'
+        : 'You have an autopay subscription that is not currently active. You can change or cancel it below.';
+    }
     if (userStatus.isOnTrial) {
       return `You're on a free trial${userStatus.daysRemaining?.trial ? ` (${userStatus.daysRemaining.trial}d left)` : ''}. Set up autopay so Ping keeps working after trial.`;
     }
     if (userStatus.trialEligible) {
       return `Welcome! Start your ${TRIAL_DAYS}-day free trial, with or without autopay.`;
-    }
-    if (userStatus.hasActiveAccess && userStatus.hasAutopay) {
-      return 'Your plan is active and autopay is on. Manage it from your dashboard.';
     }
     return 'Your free trial has ended. Set up autopay to keep using Ping.';
   };
@@ -410,50 +412,7 @@ const Pricing = () => {
                   </p>
                 )}
 
-                {userStatus.trialEligible && (
-                  <>
-                    <button
-                      type="button"
-                      disabled={submitting}
-                      onClick={handleStartTrialOnly}
-                      className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
-                    >
-                      <Gift className="w-4 h-4" />
-                      {submitting ? 'Starting...' : `Start ${TRIAL_DAYS}-day free trial`}
-                    </button>
-                    <button
-                      type="button"
-                      disabled={submitting}
-                      onClick={() => handleAutopay(true)}
-                      className="w-full bg-white text-gray-900 border border-gray-200 py-3 rounded-xl font-semibold hover:border-ping/30 hover:bg-ping-lighter/40 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
-                    >
-                      <ShieldCheck className="w-4 h-4 text-ping" />
-                      {submitting ? 'Opening Razorpay...' : 'Trial + set up autopay'}
-                    </button>
-                    <p className="text-xs text-gray-400 text-center">
-                      Autopay starts after the {TRIAL_DAYS}-day trial. Cancel anytime.
-                    </p>
-                  </>
-                )}
-
-                {!userStatus.trialEligible && !(userStatus.hasActiveAccess && userStatus.hasAutopay) && (
-                  <>
-                    <button
-                      type="button"
-                      disabled={submitting}
-                      onClick={() => handleAutopay(false)}
-                      className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
-                    >
-                      <CreditCard className="w-4 h-4" />
-                      {submitting ? 'Opening Razorpay...' : `Set up autopay — ${SYMBOL}${displayPrice}/mo`}
-                    </button>
-                    <p className="text-xs text-gray-400 text-center">
-                      You'll authorize a secure Razorpay mandate for monthly billing.
-                    </p>
-                  </>
-                )}
-
-                {userStatus.hasActiveAccess && userStatus.hasAutopay && (
+                {userStatus.hasAutopay && (
                   <>
                     <button
                       type="button"
@@ -485,7 +444,50 @@ const Pricing = () => {
                   </>
                 )}
 
-                {!userStatus.hasActiveAccess && (
+                {!userStatus.hasAutopay && userStatus.trialEligible && (
+                  <>
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={handleStartTrialOnly}
+                      className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <Gift className="w-4 h-4" />
+                      {submitting ? 'Starting...' : `Start ${TRIAL_DAYS}-day free trial`}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={() => handleAutopay(true)}
+                      className="w-full bg-white text-gray-900 border border-gray-200 py-3 rounded-xl font-semibold hover:border-ping/30 hover:bg-ping-lighter/40 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-ping" />
+                      {submitting ? 'Opening Razorpay...' : 'Trial + set up autopay'}
+                    </button>
+                    <p className="text-xs text-gray-400 text-center">
+                      Autopay starts after the {TRIAL_DAYS}-day trial. Cancel anytime.
+                    </p>
+                  </>
+                )}
+
+                {!userStatus.hasAutopay && !userStatus.trialEligible && (
+                  <>
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={() => handleAutopay(false)}
+                      className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      {submitting ? 'Opening Razorpay...' : `Set up autopay — ${SYMBOL}${displayPrice}/mo`}
+                    </button>
+                    <p className="text-xs text-gray-400 text-center">
+                      You'll authorize a secure Razorpay mandate for monthly billing.
+                    </p>
+                  </>
+                )}
+
+                {!userStatus.hasAutopay && userStatus.isOnTrial && (
                   <a
                     href={userStatus.whatsappUrl || WHATSAPP_URL}
                     target="_blank"
