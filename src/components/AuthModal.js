@@ -3,18 +3,7 @@ import { X, Lock, Mail, User, Phone, MapPin, AlertCircle, ArrowRight } from 'luc
 import { useAuth } from '../context/AuthContext';
 import { apiPost } from '../api';
 import API_BASE from '../api';
-
-const COUNTRIES = [
-  { code: 'IN', label: 'India', dial: '91' },
-  { code: 'US', label: 'United States', dial: '1' },
-  { code: 'GB', label: 'United Kingdom', dial: '44' },
-  { code: 'AU', label: 'Australia', dial: '61' },
-  { code: 'CA', label: 'Canada', dial: '1' },
-  { code: 'DE', label: 'Germany', dial: '49' },
-  { code: 'FR', label: 'France', dial: '33' },
-  { code: 'SG', label: 'Singapore', dial: '65' },
-  { code: 'AE', label: 'UAE', dial: '971' },
-];
+import { COUNTRIES } from '../data/countries';
 
 const getDetectedCountry = () => {
   try {

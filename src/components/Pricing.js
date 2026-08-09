@@ -3,8 +3,9 @@ import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, ShieldCheck, Cre
 import ScrollReveal from './ScrollReveal';
 import { useAuth } from '../context/AuthContext';
 import { apiGet, apiPost } from '../api';
+import { COUNTRIES, getCurrencyForCountry } from '../data/countries';
 
-const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
+const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$', AED: 'AED', SGD: 'S$' };
 
 const DISPLAY_PRICES = {
   helper:    { USD: 0.99, INR: 69, GBP: 0.79, EUR: 0.89, AUD: 1.49, CAD: 1.29 },
@@ -12,17 +13,7 @@ const DISPLAY_PRICES = {
   manager:   { USD: 1.99, INR: 109, GBP: 1.49, EUR: 1.79, AUD: 2.99, CAD: 2.69 },
 };
 
-const COUNTRY_OPTIONS = [
-  { code: 'IN', label: 'India', dial: '91', placeholder: '98765 43210' },
-  { code: 'US', label: 'United States', dial: '1', placeholder: '202 555 0123' },
-  { code: 'GB', label: 'United Kingdom', dial: '44', placeholder: '7400 123456' },
-  { code: 'AU', label: 'Australia', dial: '61', placeholder: '412 345 678' },
-  { code: 'CA', label: 'Canada', dial: '1', placeholder: '416 555 0123' },
-  { code: 'DE', label: 'Germany', dial: '49', placeholder: '1512 3456789' },
-  { code: 'FR', label: 'France', dial: '33', placeholder: '6 12 34 56 78' },
-  { code: 'SG', label: 'Singapore', dial: '65', placeholder: '8123 4567' },
-  { code: 'AE', label: 'UAE', dial: '971', placeholder: '50 123 4567' },
-];
+const COUNTRY_OPTIONS = COUNTRIES;
 
 const plans = [
   {
@@ -84,10 +75,7 @@ const getCountry = () => {
   } catch { return 'IN'; }
 };
 
-const getCurrency = (country) => {
-  const map = { US: 'USD', IN: 'INR', GB: 'GBP', UK: 'GBP', DE: 'EUR', FR: 'EUR', IT: 'EUR', ES: 'EUR', NL: 'EUR', AU: 'AUD', CA: 'CAD', SG: 'USD', AE: 'USD' };
-  return map[country] || 'USD';
-};
+const getCurrency = (country) => getCurrencyForCountry(country);
 
 const renderStars = (count) => {
   return Array.from({ length: 3 }, (_, i) => (
