@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, Phone, User, MapPin, ShieldCheck, CreditCard, Gift } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
+import { useAuth } from '../context/AuthContext';
 
 const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
 
@@ -139,6 +141,8 @@ const renderStars = (count) => {
 };
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [country, setCountry] = useState('IN');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -165,6 +169,10 @@ const Pricing = () => {
   }, []);
 
   const openCheckout = (planId) => {
+    if (!user) {
+      navigate('/login?next=/subscribe');
+      return;
+    }
     setCheckoutPlan(planId);
     setStep('form');
     setError('');

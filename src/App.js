@@ -16,6 +16,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import GoogleCallback from './pages/GoogleCallback';
 import WhatsAppReminder from './pages/WhatsAppReminder';
 import WhatsAppAssistant from './pages/WhatsAppAssistant';
 import ReminderBot from './pages/ReminderBot';
@@ -84,6 +85,7 @@ function App() {
             <Route path="/pricing" element={<HomePage scrollToPricing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/auth/callback" element={<GoogleCallback />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
