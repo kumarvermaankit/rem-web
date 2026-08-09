@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutDashboard, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,18 +66,29 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="h-5 w-px bg-gray-200 mx-2" />
-              <a
-                href="/privacy-policy"
-                className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-ping transition-colors duration-300"
-              >
-                Privacy
-              </a>
-              <a
-                href="/terms-of-service"
-                className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-ping transition-colors duration-300"
-              >
-                Terms
-              </a>
+              {user ? (
+                <>
+                  <a
+                    href="/dashboard"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-ping hover:bg-ping-lighter transition-colors duration-300"
+                  >
+                    <LayoutDashboard className="h-4 w-4" /> Dashboard
+                  </a>
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-500 hover:text-red-600 transition-colors duration-300"
+                  >
+                    <LogOut className="h-4 w-4" /> Log out
+                  </button>
+                </>
+              ) : (
+                <a
+                  href="/login"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-ping hover:bg-ping-lighter transition-colors duration-300"
+                >
+                  Log in
+                </a>
+              )}
               <a
                 href="/data-deletion"
                 className="ml-2 px-4 py-2 rounded-lg text-sm font-medium bg-ping text-white hover:bg-ping-dark shadow-md hover:shadow-lg transition-all duration-300"
@@ -113,6 +126,31 @@ const Navbar = () => {
               </a>
             ))}
             <div className="h-px bg-gray-100 my-2" />
+            {user ? (
+              <>
+                <a
+                  href="/dashboard"
+                  className="block px-4 py-3 rounded-lg text-base font-medium text-ping hover:bg-ping-lighter"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Dashboard
+                </a>
+                <button
+                  onClick={() => { logout(); setIsOpen(false); }}
+                  className="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-gray-500 hover:text-red-600 hover:bg-gray-50"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <a
+                href="/login"
+                className="block px-4 py-3 rounded-lg text-base font-medium text-ping hover:bg-ping-lighter"
+                onClick={() => setIsOpen(false)}
+              >
+                Log in
+              </a>
+            )}
             <a
               href="/privacy-policy"
               className="block px-4 py-3 rounded-lg text-base font-medium text-gray-500 hover:text-ping hover:bg-gray-50"
