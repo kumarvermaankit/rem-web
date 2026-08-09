@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, Phone, User, MapPin, ShieldCheck, CreditCard, Gift } from 'lucide-react';
+import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, ShieldCheck, CreditCard, Gift } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { useAuth } from '../context/AuthContext';
+import { apiGet, apiPost } from '../api';
 
 const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$' };
 
@@ -73,7 +74,6 @@ const plans = [
 
 const WHATSAPP_URL = 'https://wa.me/918076569811?text=Hi%20Ping';
 const TRIAL_DAYS = 6;
-const API_BASE = process.env.REACT_APP_API_BASE || 'https://reminder-backend-production-ping.up.railway.app';
 
 const getCountry = () => {
   try {
@@ -89,50 +89,6 @@ const getCurrency = (country) => {
   return map[country] || 'USD';
 };
 
-const getDial = (country) => COUNTRY_OPTIONS.find((c) => c.code === country)?.dial || '91';
-
-/** Normalize to WhatsApp-style digits only, e.g. 918076569811 */
-const normalizePhone = (raw, country = 'IN') => {
-  let digits = String(raw || '').replace(/\D/g, '');
-  if (!digits) return '';
-  if (digits.startsWith('00')) digits = digits.slice(2);
-
-  const dial = getDial(country);
-
-  if (country === 'IN' && /^[6-9]\d{9}$/.test(digits)) return `${dial}${digits}`;
-  if (digits.startsWith(dial) && digits.length >= dial.length + 8) return digits;
-  if ((country === 'US' || country === 'CA') && digits.length === 10) return `${dial}${digits}`;
-  if (digits.length <= 11 && !digits.startsWith(dial)) return `${dial}${digits}`;
-  return digits;
-};
-
-const isValidPhone = (normalized, country = 'IN') => {
-  if (!normalized || normalized.length < 10) return false;
-  if (country === 'IN') return /^91[6-9]\d{9}$/.test(normalized);
-  return normalized.length >= 10 && normalized.length <= 15;
-};
-
-const apiPost = async (path, body) => {
-  if (!API_BASE) {
-    throw new Error('API is not configured. Set REACT_APP_API_BASE.');
-  }
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  let data = null;
-  try {
-    data = await res.json();
-  } catch {
-    throw new Error(`Server error (${res.status}). Please try again.`);
-  }
-  if (!res.ok && !data?.error) {
-    throw new Error(data?.message || `Request failed (${res.status})`);
-  }
-  return data;
-};
-
 const renderStars = (count) => {
   return Array.from({ length: 3 }, (_, i) => (
     <Star key={i} className={`w-4 h-4 ${i < count ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}`} />
@@ -145,15 +101,13 @@ const Pricing = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const [step, setStep] = useState(null); // null | 'form' | 'options' | 'done'
+  const [step, setStep] = useState(null); // null | 'options' | 'done'
   const [checkoutPlan, setCheckoutPlan] = useState(null);
-  const [form, setForm] = useState({ name: '', phone: '', country: 'IN' });
   const [userStatus, setUserStatus] = useState(null);
   const [doneMeta, setDoneMeta] = useState(null);
 
   const currency = getCurrency(country);
   const SYMBOL = SYMBOL_MAP[currency] || currency;
-  const countryOpt = COUNTRY_OPTIONS.find((c) => c.code === (form.country || country)) || COUNTRY_OPTIONS[0];
   const showCountryName = COUNTRY_OPTIONS.find((c) => c.code === country)?.label || country;
   const planName = plans.find((p) => p.id === checkoutPlan)?.name;
   const displayPrice = checkoutPlan
@@ -163,20 +117,26 @@ const Pricing = () => {
   useEffect(() => {
     const detected = getCountry();
     setCountry(detected);
-    setForm((f) => ({ ...f, country: detected }));
   }, []);
 
-  const openCheckout = (planId) => {
+  const openCheckout = async (planId) => {
     if (!user) {
       openAuth('login', () => openCheckout(planId));
       return;
     }
     setCheckoutPlan(planId);
-    setStep('form');
+    setStep('options');
     setError('');
     setUserStatus(null);
     setDoneMeta(null);
     setSubmitting(false);
+    try {
+      const data = await apiGet('/razorpay/user-status');
+      if (data.success) setUserStatus(data);
+      else setError(data.error || 'Could not check your subscription status.');
+    } catch {
+      setError('Could not check your subscription status. Please try again.');
+    }
   };
 
   const closeCheckout = () => {
@@ -188,58 +148,17 @@ const Pricing = () => {
     setDoneMeta(null);
   };
 
-  const updateForm = (key, value) => {
-    setForm((f) => ({ ...f, [key]: value }));
-    if (key === 'country') setCountry(value);
-  };
-
-  const handleIdentify = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    const name = form.name.trim();
-    const phone = normalizePhone(form.phone, form.country);
-    if (!name) {
-      setError('Please enter your name.');
-      return;
-    }
-    if (!isValidPhone(phone, form.country)) {
-      setError(`Enter a valid WhatsApp number for ${countryOpt.label} (e.g. ${countryOpt.placeholder}).`);
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const data = await apiPost('/razorpay/find-or-create-user', {
-        name,
-        phone,
-        country: form.country,
-        location: form.country,
-      });
-      if (!data.success) {
-        setError(data.error || 'Could not identify user.');
-        return;
-      }
-      setForm((f) => ({ ...f, phone })); // keep normalized
-      setUserStatus(data);
-      setStep('options');
-    } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const createAutopayLink = async (withTrial) => {
-    const phone = normalizePhone(form.phone, form.country);
+    const contact = (user && user.phone) || '';
+    if (!contact || contact.length < 10) {
+      throw new Error('Add your WhatsApp number to your profile first (Log in → profile).');
+    }
     let customerId;
-
     try {
       const custData = await apiPost('/razorpay/create-customer', {
-        userId: userStatus.userId,
-        name: form.name.trim(),
-        contact: phone,
-        country: form.country,
+        name: user?.name,
+        contact,
+        country: user?.country || 'IN',
       });
       if (custData.success) {
         customerId = custData.customerId;
@@ -252,10 +171,9 @@ const Pricing = () => {
 
     const payload = {
       planId: checkoutPlan,
-      userId: userStatus.userId,
       interval: 'monthly',
-      country: form.country,
-      contact: phone,
+      country: user?.country || 'IN',
+      contact,
     };
     if (customerId) payload.customerId = customerId;
     if (withTrial) payload.trialDays = TRIAL_DAYS;
@@ -272,7 +190,6 @@ const Pricing = () => {
     setError('');
     try {
       const data = await apiPost('/razorpay/start-trial', {
-        userId: userStatus.userId,
         planId: checkoutPlan,
         trialDays: TRIAL_DAYS,
       });
@@ -312,12 +229,10 @@ const Pricing = () => {
       return `You're on a free trial${userStatus.daysRemaining?.trial ? ` (${userStatus.daysRemaining.trial}d left)` : ''}. Set up autopay so Ping keeps working after trial.`;
     }
     if (userStatus.trialEligible) {
-      return userStatus.isNewUser
-        ? `Welcome! Start your ${TRIAL_DAYS}-day free trial, with or without autopay.`
-        : `You're eligible for a ${TRIAL_DAYS}-day free trial.`;
+      return `Welcome! Start your ${TRIAL_DAYS}-day free trial, with or without autopay.`;
     }
     if (userStatus.hasActiveAccess && userStatus.hasAutopay) {
-      return 'Your plan is active. You can chat with Ping anytime.';
+      return 'Your plan is active and autopay is on. Manage it from your dashboard.';
     }
     return 'Your free trial has ended. Set up autopay to keep using Ping.';
   };
@@ -443,7 +358,6 @@ const Pricing = () => {
               </h3>
               <p className="text-sm text-gray-500 mt-1">
                 {SYMBOL}{displayPrice}/mo
-                {step === 'form' && ' — tell us who you are'}
                 {step === 'options' && ' — choose how to continue'}
               </p>
             </div>
@@ -454,80 +368,18 @@ const Pricing = () => {
               </div>
             )}
 
-            {step === 'form' && (
-              <form onSubmit={handleIdentify} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <User className="w-3.5 h-3.5 inline mr-1" />
-                    Full name
-                  </label>
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={(e) => updateForm('name', e.target.value)}
-                    placeholder="Your name"
-                    required
-                    autoComplete="name"
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <MapPin className="w-3.5 h-3.5 inline mr-1" />
-                    Location
-                  </label>
-                  <select
-                    value={form.country}
-                    onChange={(e) => updateForm('country', e.target.value)}
-                    required
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all bg-white"
-                  >
-                    {COUNTRY_OPTIONS.map((c) => (
-                      <option key={c.code} value={c.code}>{c.label}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    <Phone className="w-3.5 h-3.5 inline mr-1" />
-                    WhatsApp number
-                  </label>
-                  <div className="flex gap-2">
-                    <div className="px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-600 whitespace-nowrap">
-                      +{countryOpt.dial}
-                    </div>
-                    <input
-                      type="tel"
-                      value={form.phone}
-                      onChange={(e) => updateForm('phone', e.target.value)}
-                      placeholder={countryOpt.placeholder}
-                      required
-                      autoComplete="tel"
-                      className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none transition-all"
-                    />
-                  </div>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Use the same number you message Ping with.
-                  </p>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
-                  {submitting ? 'Checking...' : 'Continue'}
-                </button>
-              </form>
-            )}
-
             {step === 'options' && userStatus && (
               <div className="space-y-4">
                 <div className="rounded-xl bg-ping-lighter/60 border border-ping/10 px-3 py-2.5 text-sm text-gray-600">
                   {statusBanner()}
                 </div>
+
+                {userStatus.phone && (
+                  <p className="text-xs text-gray-400 text-center -mt-1">
+                    This subscription will be linked to your WhatsApp number{' '}
+                    <span className="font-semibold text-gray-600">+{userStatus.phone}</span>
+                  </p>
+                )}
 
                 {userStatus.trialEligible && (
                   <>
@@ -572,7 +424,16 @@ const Pricing = () => {
                   </>
                 )}
 
-                {(userStatus.hasActiveAccess || userStatus.isOnTrial || (userStatus.hasActiveAccess && userStatus.hasAutopay)) && (
+                {userStatus.hasActiveAccess && userStatus.hasAutopay && (
+                  <a
+                    href="/dashboard"
+                    className="w-full bg-gradient-to-r from-ping to-ping-dark text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-ping/25 transition-all inline-flex items-center justify-center gap-2"
+                  >
+                    Manage subscription in dashboard
+                  </a>
+                )}
+
+                {!userStatus.hasActiveAccess && (
                   <a
                     href={userStatus.whatsappUrl || WHATSAPP_URL}
                     target="_blank"
