@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authModal, setAuthModal] = useState(null);
 
   const fetchMe = useCallback(async () => {
     const token = localStorage.getItem('ping_token');
@@ -57,8 +58,11 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const openAuth = (mode = 'login', onSuccess = null) => setAuthModal({ mode, onSuccess });
+  const closeAuth = () => setAuthModal(null);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, fetchMe }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, fetchMe, authModal, openAuth, closeAuth }}>
       {children}
     </AuthContext.Provider>
   );

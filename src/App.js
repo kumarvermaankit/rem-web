@@ -8,13 +8,12 @@ import Pricing from './components/Pricing';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import AuthModal from './components/AuthModal';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import DataDeletion from './components/DataDeletion';
 import NotFound from './components/NotFound';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import GoogleCallback from './pages/GoogleCallback';
 import WhatsAppReminder from './pages/WhatsAppReminder';
@@ -78,13 +77,12 @@ function App() {
       <Router>
         <div className="min-h-screen bg-white font-body">
           <Navbar />
+          <AuthModal />
           <HashScroll />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/subscribe" element={<HomePage scrollToPricing />} />
             <Route path="/pricing" element={<HomePage scrollToPricing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/auth/callback" element={<GoogleCallback />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

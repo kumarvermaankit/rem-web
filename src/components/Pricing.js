@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Check, Star, Sparkles, MessageCircle, ArrowUpRight, X, Phone, User, MapPin, ShieldCheck, CreditCard, Gift } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { useAuth } from '../context/AuthContext';
@@ -141,8 +140,7 @@ const renderStars = (count) => {
 };
 
 const Pricing = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, openAuth } = useAuth();
   const [country, setCountry] = useState('IN');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -170,7 +168,7 @@ const Pricing = () => {
 
   const openCheckout = (planId) => {
     if (!user) {
-      navigate('/login?next=/subscribe');
+      openAuth('login', () => openCheckout(planId));
       return;
     }
     setCheckoutPlan(planId);

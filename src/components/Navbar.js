@@ -6,7 +6,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
-  const { user, logout } = useAuth();
+  const { user, logout, openAuth } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,12 +82,12 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <a
-                  href="/login"
+                <button
+                  onClick={() => openAuth('login')}
                   className="px-4 py-2 rounded-lg text-sm font-medium text-ping hover:bg-ping-lighter transition-colors duration-300"
                 >
                   Log in
-                </a>
+                </button>
               )}
               <a
                 href="/data-deletion"
@@ -143,13 +143,12 @@ const Navbar = () => {
                 </button>
               </>
             ) : (
-              <a
-                href="/login"
-                className="block px-4 py-3 rounded-lg text-base font-medium text-ping hover:bg-ping-lighter"
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => { openAuth('login'); setIsOpen(false); }}
+                className="block w-full text-left px-4 py-3 rounded-lg text-base font-medium text-ping hover:bg-ping-lighter"
               >
                 Log in
-              </a>
+              </button>
             )}
             <a
               href="/privacy-policy"
