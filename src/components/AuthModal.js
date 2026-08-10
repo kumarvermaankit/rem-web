@@ -85,7 +85,13 @@ const AuthModal = () => {
       return;
     }
     setLoading(true);
-    const data = await apiPost('/auth/profile', { name: name.trim(), phone: digits, country, force });
+    const data = await apiPost('/auth/profile', {
+      name: name.trim(),
+      phone: digits,
+      country,
+      force,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
     setLoading(false);
     if (!data.success) {
       if (data.phoneConflict) {

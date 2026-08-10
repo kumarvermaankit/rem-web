@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Bell, StickyNote, KeyRound, CreditCard, Plus, Trash2, Eye, EyeOff,
   LogOut, Calendar, CheckCircle2, Circle, Loader2, AlertCircle, RefreshCw,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { apiGet, apiPost, apiDelete } from '../api';
@@ -89,8 +90,10 @@ const Dashboard = () => {
 
   const addReminder = async (e) => {
     e.preventDefault();
+    const reminderDate = remDate ? new Date(remDate).toISOString() : undefined;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const d = await apiPost('/dashboard/reminders', {
-      title: remTitle, description: remDesc, reminderDate: remDate || undefined,
+      title: remTitle, description: remDesc, reminderDate, timezone,
     });
     if (d.success) {
       setRemTitle(''); setRemDesc(''); setRemDate(''); setShowForm(false);
@@ -219,6 +222,11 @@ const Dashboard = () => {
           </div>
         )}
 
+        <div className="mb-4 flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl px-4 py-3 text-sm">
+          <ShieldCheck className="h-4 w-4 shrink-0" />
+          <span>Everything you store is encrypted. No data is saved by us — privacy is our priority.</span>
+        </div>
+
         {error && (
           <div className="mb-4 flex items-start gap-2 bg-red-50 text-red-700 rounded-lg px-4 py-3 text-sm">
             <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" /> <span>{error}</span>
@@ -281,6 +289,9 @@ const Dashboard = () => {
                   onChange={(e) => setRemDate(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:border-ping focus:ring-2 focus:ring-ping/20 outline-none text-sm"
                 />
+                <p className="text-xs text-gray-400 -mt-1">
+                  Time is in your timezone ({Intl.DateTimeFormat().resolvedOptions().timeZone})
+                </p>
                 <div className="flex gap-2">
                   <button type="submit" className="px-4 py-2 bg-ping text-white text-sm font-semibold rounded-lg hover:bg-ping-dark">Create</button>
                   <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 rounded-lg">Cancel</button>
