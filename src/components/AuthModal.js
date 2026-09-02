@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Lock, Mail, User, Phone, MapPin, AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { apiPost } from '../api';
-import API_BASE from '../api';
+import { GOOGLE_AUTH_URL } from '../api';
 import { COUNTRIES } from '../data/countries';
 
 const getDetectedCountry = () => {
@@ -184,7 +184,7 @@ const AuthModal = () => {
         {step !== 'profile' && (
           <>
             <a
-              href={`${API_BASE}/auth/google`}
+              href={GOOGLE_AUTH_URL}
               className="w-full flex items-center justify-center gap-2.5 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-2.5 rounded-lg transition-colors mb-4"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">

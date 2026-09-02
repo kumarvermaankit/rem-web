@@ -25,6 +25,8 @@ import WhatsAppTodoList from './pages/WhatsAppTodoList';
 import WhatsAppReminderApp from './pages/WhatsAppReminderApp';
 import WhatsAppNotes from './pages/WhatsAppNotes';
 
+const DASHBOARD_PATHS = ['/dashboard'];
+
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
@@ -71,35 +73,44 @@ function HashScroll() {
   return null;
 }
 
+function AppContent() {
+  const location = useLocation();
+  const isDashboard = DASHBOARD_PATHS.some(p => location.pathname.startsWith(p));
+
+  return (
+    <div className="min-h-screen bg-white font-body">
+      {!isDashboard && <Navbar />}
+      <AuthModal />
+      <HashScroll />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/subscribe" element={<HomePage scrollToPricing />} />
+        <Route path="/pricing" element={<HomePage scrollToPricing />} />
+        <Route path="/auth/callback" element={<GoogleCallback />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/data-deletion" element={<DataDeletion />} />
+        <Route path="/whatsapp-reminder" element={<WhatsAppReminder />} />
+        <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
+        <Route path="/reminder-bot" element={<ReminderBot />} />
+        <Route path="/personal-assistant" element={<PersonalAssistant />} />
+        <Route path="/how-to-set-reminders-on-whatsapp" element={<HowToSetReminders />} />
+        <Route path="/whatsapp-to-do-list" element={<WhatsAppTodoList />} />
+        <Route path="/whatsapp-reminder-app" element={<WhatsAppReminderApp />} />
+        <Route path="/whatsapp-notes" element={<WhatsAppNotes />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {!isDashboard && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-white font-body">
-          <Navbar />
-          <AuthModal />
-          <HashScroll />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/subscribe" element={<HomePage scrollToPricing />} />
-            <Route path="/pricing" element={<HomePage scrollToPricing />} />
-            <Route path="/auth/callback" element={<GoogleCallback />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/data-deletion" element={<DataDeletion />} />
-            <Route path="/whatsapp-reminder" element={<WhatsAppReminder />} />
-            <Route path="/whatsapp-assistant" element={<WhatsAppAssistant />} />
-            <Route path="/reminder-bot" element={<ReminderBot />} />
-            <Route path="/personal-assistant" element={<PersonalAssistant />} />
-            <Route path="/how-to-set-reminders-on-whatsapp" element={<HowToSetReminders />} />
-            <Route path="/whatsapp-to-do-list" element={<WhatsAppTodoList />} />
-            <Route path="/whatsapp-reminder-app" element={<WhatsAppReminderApp />} />
-            <Route path="/whatsapp-notes" element={<WhatsAppNotes />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
-        </div>
+        <AppContent />
       </Router>
     </AuthProvider>
   );

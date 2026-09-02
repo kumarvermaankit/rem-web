@@ -1,4 +1,5 @@
 const API_BASE = process.env.REACT_APP_API_BASE || 'https://reminder-backend-production-ping.up.railway.app';
+export const GOOGLE_AUTH_URL = process.env.REACT_APP_GOOGLE_AUTH_URL || `${API_BASE}/auth/google`;
 
 const getToken = () => localStorage.getItem('ping_token') || '';
 

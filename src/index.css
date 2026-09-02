@@ -111,7 +111,7 @@
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-medium text-sm
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm
            bg-ping text-white
            hover:bg-ping-dark hover:shadow-lg
            transition-all duration-300;
@@ -122,6 +122,24 @@
            focus:ring-2 focus:ring-ping/30 focus:border-ping
            transition-all duration-300 outline-none
            placeholder:text-gray-400;
+  }
+
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
@@ -148,4 +166,13 @@
 @keyframes scaleIn {
   0% { opacity: 0; transform: scale(0.9); }
   100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
 }
