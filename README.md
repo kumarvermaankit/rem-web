@@ -179,15 +179,7 @@ This creates an optimized `build` folder ready for deployment.
 4. Test thoroughly
 5. Submit a pull request
 
-## License
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## Support
-
-For questions or support, please contact:
-- Email: support@whatsappbot.com
-- WhatsApp: +1 (555) 123-4567
 
 ---
 
