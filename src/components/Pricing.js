@@ -5,17 +5,31 @@ import { useAuth } from '../context/AuthContext';
 import { apiGet, apiPost } from '../api';
 import { COUNTRIES, getCurrencyForCountry } from '../data/countries';
 
-const SYMBOL_MAP = { USD: '$', INR: '₹', GBP: '£', EUR: '€', AUD: 'A$', CAD: 'C$', AED: 'AED', SGD: 'S$' };
+const SYMBOL_MAP = { USD: '$', INR: '₹' };
 
 const DISPLAY_PRICES = {
-  helper:    { USD: 0.99, INR: 69, GBP: 0.79, EUR: 0.89, AUD: 1.49, CAD: 1.29 },
-  assistant: { USD: 1.29, INR: 89, GBP: 0.99, EUR: 1.19, AUD: 1.99, CAD: 1.79 },
-  manager:   { USD: 1.99, INR: 109, GBP: 1.49, EUR: 1.79, AUD: 2.99, CAD: 2.69 },
+  helper:    { USD: 4, INR: 69 },
+  assistant: { USD: 7, INR: 89 },
+  manager:   { USD: 10, INR: 109 },
 };
 
 const COUNTRY_OPTIONS = COUNTRIES;
 
 const plans = [
+  {
+    id: 'free',
+    name: 'Free',
+    stars: 0,
+    description: 'Core reminders for getting started',
+    features: [
+      '20 reminders per month',
+      'Recurring reminders',
+      'Works directly in WhatsApp',
+      'No credit card required',
+    ],
+    gradient: 'from-slate-400 to-slate-600',
+    popular: false,
+  },
   {
     id: 'helper',
     name: 'Helper',
@@ -26,7 +40,6 @@ const plans = [
       'Recurring reminders',
       'Personal notes vault',
       'Password manager',
-      'Daily morning prompt',
     ],
     gradient: 'from-ping-light to-ping',
     popular: false,
@@ -69,10 +82,8 @@ const TRIAL_DAYS = 6;
 const getCountry = () => {
   try {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const region = timezone.split('/')[0];
-    const map = { Asia: 'IN', Europe: 'GB', America: 'US', Australia: 'AU', Pacific: 'AU', Africa: 'GB' };
-    return map[region] || 'IN';
-  } catch { return 'IN'; }
+    return timezone.startsWith('Asia/Kolkata') || timezone.startsWith('Asia/Calcutta') ? 'IN' : 'US';
+  } catch { return 'US'; }
 };
 
 const getCurrency = (country) => getCurrencyForCountry(country);
@@ -293,9 +304,11 @@ const Pricing = () => {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
-            const price = DISPLAY_PRICES[plan.id][currency] || DISPLAY_PRICES[plan.id].USD;
+            const price = plan.id === 'free'
+              ? 0
+              : (DISPLAY_PRICES[plan.id][currency] || DISPLAY_PRICES[plan.id].USD);
 
             return (
               <ScrollReveal key={plan.id} delay={index + 1} variant={index === 0 ? 'left' : index === 2 ? 'right' : 'up'}>
@@ -327,9 +340,9 @@ const Pricing = () => {
 
                     <div className="flex items-baseline gap-1 mb-6">
                       <span className="text-3xl md:text-4xl font-display font-bold text-gray-900">
-                        {SYMBOL}{price}
+                        {plan.id === 'free' ? 'Free' : `${SYMBOL}${price}`}
                       </span>
-                      <span className="text-gray-400 text-sm">/month</span>
+                      {plan.id !== 'free' && <span className="text-gray-400 text-sm">/month</span>}
                     </div>
 
                     <ul className="space-y-3 mb-6 flex-1">
@@ -344,18 +357,18 @@ const Pricing = () => {
                     </ul>
 
                     <button
-                      onClick={() => openCheckout(plan.id)}
+                      onClick={() => plan.id === 'free' ? (window.location.href = WHATSAPP_URL) : openCheckout(plan.id)}
                       className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2 text-sm ${
                         plan.popular
                           ? 'bg-gradient-to-r from-ping to-ping-dark text-white hover:shadow-xl hover:shadow-ping/25 hover:-translate-y-0.5'
                           : 'bg-gray-50 text-gray-900 border border-gray-200 hover:border-ping/30 hover:bg-ping-lighter/50 hover:-translate-y-0.5'
                       }`}
                     >
-                      Start free trial
+                      {plan.id === 'free' ? 'Get started free' : 'Start free trial'}
                       <ArrowUpRight className="w-4 h-4" />
                     </button>
                     <p className="text-xs text-gray-400 text-center mt-2">
-                      or subscribe · {SYMBOL}{price}/mo
+                      {plan.id === 'free' ? 'Start on WhatsApp' : `or subscribe · ${SYMBOL}${price}/mo`}
                     </p>
                   </div>
                 </div>
@@ -367,7 +380,7 @@ const Pricing = () => {
         <ScrollReveal delay={4}>
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-400">
-              All plans include a {TRIAL_DAYS}-day free trial. Cancel anytime. Prices may vary by region.
+              Paid plans include a {TRIAL_DAYS}-day free trial. Cancel anytime. Prices may vary by region.
             </p>
           </div>
         </ScrollReveal>
